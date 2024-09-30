@@ -21,10 +21,10 @@ sites = [["eNKI", 18, 80],
 root_dir = "/home/nnieto/Nico/Harmonization/data/final_data_split/"
 qc_dir = "/home/nnieto/Nico/Harmonization/data/qc/"
 save_dir = "/home/nnieto/Nico/Harmonization/data/qc/final_data_split/"
-n_bins = 10
+n_age_bins = 10
+sampling = "low_Q"
 
 # %%
-sampling = "low_Q"
 # Main loop
 for site, low_cut_age, high_cut_age in sites:
 
@@ -33,8 +33,9 @@ for site, low_cut_age, high_cut_age in sites:
     qc_data = pd.read_csv(qc_dir+site+"_cat12.8.1_rois_thalamus.csv")
     qc_data.rename(columns={"SubjectID": "subject"}, inplace=True)
 
+    # For the naming exeptions
     if site == "eNKI":
-        qc_data = qc_data[qc_data.Session == "ses-BAS1"]
+        qc_data = qc_data[qc_data["Session"] == "ses-BAS1"]
     if site == "SALD":
         qc_data['subject'] = qc_data['subject'].str.replace('sub-', '')
         qc_data['subject'] = pd.to_numeric(qc_data['subject'])
@@ -44,20 +45,26 @@ for site, low_cut_age, high_cut_age in sites:
 
     # Remove under 18 patients
     idx_age = np.array(round(Y_data["age"]) >= low_cut_age)
-
+    # Remove patients over the limit
     idx_age2 = np.array(high_cut_age >= round(Y_data["age"]))
     Y_data = Y_data[idx_age*idx_age2]
 
+    # For getting the "age bins". We will have the same number
+    # of images for each gender in each age bin
     age_min = round(Y_data["age"].min())
     age_max = round(Y_data["age"].max())
-    steps = round((age_max-age_min) / n_bins)
+    steps = round((age_max-age_min) / n_age_bins)
     age_bins = range(age_min, age_max, steps)
 
+    # Determine what is the max number of images in the
+    # formed age bins for each gender
     n_images = get_min_common_number_images_in_age_bins(Y_data, age_bins)
     print(n_images)
+
+    # get the images depending the QC
     index = filter_age_bins_with_qc(Y_data, age_bins,
                                     n_images, sampling=sampling)
-
+    # filter the data
     Y_filt = Y_data.loc[index]
     X_filt = X_data.loc[index]
     plt.figure()
