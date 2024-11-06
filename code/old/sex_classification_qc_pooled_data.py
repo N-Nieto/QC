@@ -1,13 +1,11 @@
 # %%
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-from sklearn.preprocessing import LabelEncoder
 import sys
+import pandas as pd
 from pathlib import Path
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import RepeatedStratifiedKFold
-dir_path = '../lib/'
+
+dir_path = '../../lib/'
 __file__ = dir_path + "data_processing.py"
 to_append = Path(__file__).resolve().parent.parent.as_posix()
 sys.path.append(to_append)
@@ -15,28 +13,12 @@ sys.path.append(to_append)
 from lib.data_processing import get_min_common_number_images_in_age_bins, filter_age_bins_with_qc # noqa
 from lib.data_loading import load_data_and_qc                           # noqa
 from lib.data_processing import keep_desired_age_range, get_age_bins          # noqa
-from lib.ml import results_to_df_qc_single_site, results_qc_single_site                  # noqa
-from scipy.stats import ttest_ind
-# Sample Data (replace with your actual dataset)
-# X = pd.DataFrame(...)  # Your feature matrix
-# y = pd.Series(...)     # Your continuous target variable (age)
-
-# Threshold for statistical significance (p-value)
-p_value_threshold = 0.05
-
-# ----------------------------
-# 1. Initialize lists to store results
-# ----------------------------
-p_values = []  # To store p-values for each feature
-significant_features_count = 0  # Counter for significant features
-
-
-
+from lib.ml import results_to_df_qc_single_site, results_qc_multiple_site                  # noqa
 
 # Directions
 data_dir = "/home/nnieto/Nico/Harmonization/data/final_data_split/"
 qc_dir = "/home/nnieto/Nico/Harmonization/data/qc/"
-save_dir = "/home/nnieto/Nico/Harmonization/QC/output/statistics/"
+save_dir = "/home/nnieto/Nico/Harmonization/QC/output/sex_classification/"
 # %%
 # Select dataset
 site_list = ["SALD", "eNKI", "CamCAN"]
@@ -47,10 +29,9 @@ low_cut_age = 18
 high_cut_age = 80
 # Number of bins to split the age and keep the same number
 # of images in each age bin
-n_age_bins = 10
+n_age_bins = 3
 
 clf = LogisticRegression()
-
 results = []
 
 kf_out = RepeatedStratifiedKFold(n_splits=5,
@@ -61,10 +42,9 @@ kf_out = RepeatedStratifiedKFold(n_splits=5,
 # high_Q retains the images with LOWER IQR
 # random dosen't care about QC
 sampling_list = ["low_Q", "high_Q", "random_Q"]
+
 X_pooled = pd.DataFrame()
 Y_pooled = pd.DataFrame()
-# plt.figure(figsize=(15, 8))
-
 for col, sampling in enumerate(sampling_list):
     print(sampling)
 
@@ -92,41 +72,43 @@ for col, sampling in enumerate(sampling_list):
         X_pooled = pd.concat([X_pooled, X])
         Y_pooled = pd.concat([Y_pooled, Y])
 
-    Y_pooled["gender"].replace({"F": 0, "M": 1}, inplace=True)
-    sites = Y_pooled["site"].reset_index()
-    sites = sites["site"]
+    # Y_pooled["gender"].replace({"F": 0, "M": 1}, inplace=True)
+    # sites = Y_pooled["site"].reset_index()
+    # sites = sites["site"]
+    # data = pd.concat([X_pooled, Y_pooled])
+    print("QRC Mean Median STD")
+    print(Y_pooled["IQR"].mean())
+    print(Y_pooled["IQR"].median())
+    print(Y_pooled["IQR"].std())
+# %%
     Y = Y_pooled["gender"]
-    X = X_pooled
+    X = X_pooled.to_numpy()
     Y = Y.to_numpy()
-    feature_names = X.columns  # Get feature names
-    p_values = []  # To store p-values for each feature
-    significant_features_count = 0  # Counter for significant features
-    for feature in feature_names:
-        # Split the feature data into two groups based on the binary target (e.g., male vs. female)
-        group1 = X[Y == 0][feature]  # Group corresponding to target == 0
-        group2 = X[Y == 1][feature]  # Group corresponding to target == 1
-        
-        # Perform independent t-test
-        t_stat, p_val = ttest_ind(group1, group2)
-        
-        # Append the p-value for this feature
-        p_values.append(p_val)
-        
-        # Check if the feature is statistically significant
-        if p_val < p_value_threshold:
-            significant_features_count += 1
 
-    # ----------------------------
-    # 4. Convert p-values to a Pandas DataFrame for easy handling
-    # ----------------------------
-    p_values_df = pd.DataFrame({
-        'Feature': feature_names,
-        'P-value': p_values,
-        'sampling': sampling
-    })
+    # Main loop
+    for i_fold, (train_index, test_index) in enumerate(kf_out.split(X=X, y=Y)):       # noqa
+        print("FOLD: " + str(i_fold))
 
-    p_values_df.to_csv(save_dir+"sampling_"+sampling+".csv")
-# Add a red line to show the significance threshold (e.g., p=0.05)
+        # Patients used for train and internal XGB validation
+        X_train = X[train_index, :]
+        Y_train = Y[train_index]
+        site_train = sites.iloc[train_index]
 
+        # Patients used to generete a prediction
+        X_test = X[test_index, :]
+        Y_test = Y[test_index]
+        site_test = sites.iloc[test_index]
+        # None model
+        clf.fit(X_train, Y_train)
+        pred_test = clf.predict_proba(X_test)[:, 1]
+        results = results_qc_multiple_site(i_fold, "Pooled data Test", pred_test, Y_test, results, sampling, site_test)                 # noqa
+
+        pred_train = clf.predict_proba(X_train)[:, 1]
+        results = results_qc_multiple_site(i_fold, "Pooled data Train", pred_train, Y_train, results, sampling, site_train)                 # noqa
+
+
+results = results_to_df_qc_single_site(results)
+# %%
+results.to_csv(save_dir+"results_pooled_data_site_SALD_eNKI_CamCAN_all_sampling_Q.csv")   # noqa
 
 # %%
