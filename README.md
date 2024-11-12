@@ -19,14 +19,15 @@ MRI brain scans are affected by image artifacts caused by head motion, influenci
 - Increasing sample size and image quality improves statistical power in univariate analyses but has a marginal effect on classification accuracy for machine learning approaches.
 - For univariate methods, higher image quality is crucial, while machine learning benefits more from larger sample sizes.
 
-[**Paper Link:**](https://arxiv.org/abs/2411.01268) https://arxiv.org/abs/2411.01268
+**Paper Link:** https://arxiv.org/abs/2411.01268
 
 ## Repository Structure
 
-- `data/`: Scripts to preprocess and prepare datasets for analysis.
+- `./data/`: Data can be publically downloaded and should be stored in a folder with the name of the dataset.
 - `code/statistics/`: Python scripts for univariate statistical tests, machine learning experiments, and IQA evaluations.
 - `code/sex_classification/`: Python scripts for machine learning sex classification.
-- `output/`: Directory to store analysis outputs, figures, and tables.
+- `output/refactor/ML`: Directory to store analysis outputs. Contains the experiment results used in the plots.
+- `output/refactor/ML`: Directory to store analysis outputs. Contains the experiment results used in the plots.
 - `plot/`: Jupyter notebooks providing step-by-step workflows for reproducing key results and figures from the paper.
 
 
