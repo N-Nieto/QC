@@ -19,7 +19,7 @@ MRI brain scans are affected by image artifacts caused by head motion, influenci
 - Increasing sample size and image quality improves statistical power in univariate analyses but has a marginal effect on classification accuracy for machine learning approaches.
 - For univariate methods, higher image quality is crucial, while machine learning benefits more from larger sample sizes.
 
-**Paper Link:** [TBD, update if available]
+[**Paper Link:**](https://arxiv.org/abs/2411.01268) https://arxiv.org/abs/2411.01268
 
 ## Repository Structure
 
