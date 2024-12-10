@@ -30,7 +30,7 @@ MRI brain scans are affected by image artifacts caused by head motion, influenci
 
 ## Repository Structure
 
-- `data/`: Data can be publically downloaded and should be stored as X_(site).csv Y_(site).csv QC_(site).csv.
+- `data/`: Features are shared anonymized as X_(site).csv and Y_(site).csv.
 - `code/statistics/`: Python scripts for univariate statistical tests, machine learning experiments, and IQA evaluations.
 - `code/sex_classification/`: Python scripts for machine learning sex classification.
 - `output/statistics`: Directory to store analysis outputs. Contains the experiment results used in the plots.
@@ -61,28 +61,28 @@ conda activate QC_env
 ## The sampling by QC
 
 The core of this work is to sample the site data using the QC information.
-For generating low, high or random QC, the function
+For generating low, high, or random QC, the function
 ```balance_data_age_gender_Qsampling``` from ```lib/data_processing.py```.
 This function uses age bins to balance the data.
 
-## The logic of this functions is as follows
+## The logic of this function is as follows
 
 1. For a given age bin, compute how many images for each gender exist.
-2. Repeat this for all age bins and find the minimun value.
+2. Repeat this for all age bins and find the minimum value.
 3. Now we know what is the number of images to sample for each gender in each age bin
-4. For each age bin, sort the images acording QC (invers, direct or randomly)
-5. Retain the minimun value
+4. For each age bin, sort the images according to QC (inverse, direct, or randomly)
+5. Retain the minimum value
 
-For example, lets assume we have 3 age bins. In the first bin, there are 20 images of male and 15 of female. In the second 40 and 10 for male and female and in the last 50 and 100. 
-In this case, the minimun possible to sample is 10, as is the minimun of female in bin 2.
+For example, let's assume we have 3 age bins. In the first bin, there are 20 images of males and 15 of females. In the second 40 and 10 for male and female and in the last 50 and 100.
+In this case, the minimum possible sample is 10, as is the minimum of females in bin 2.
 
-Now, we will sample **10** males and females in the first, second and last bin. For the first age bin, we will select 10 of the 20 males. How? accordingly with the QC of the images.
+Now, we will sample **10** males and females in the first, second, and last bin. For the first age bin, we will select 10 of the 20 males. How? accordingly with the QC of the images.
 
-For the females, we will get 10 of the 15 possible. As you are suspecting, if we sample with low QC or high QC, there will be 5 images that there will be in both samples. This is why, the sampling participants can be shared for different QC sampling strategies.
+For the females, we will get 10 of the 15 possible. As you suspect, if we sample with low QC or high QC, there will be 5 images that there will be in both samples. This is why, the sampling participants can be shared for different QC sampling strategies.
 
-As you already guess, for the females in the second bin, does not matter how we will sample, we will always get the same 10 images.
+As you already guessed, for the females in the second bin, does not matter how we sample, we will always get the same 10 images.
 
-### If you select a lower number of age bins, there will be more images selected, but the samples will be more overlaped. If you select a high number of age bins, less images will be selected but the cohort will be more different between each other.
+### If you select a lower number of age bins, there will be more images selected, but the samples will be more overlapped. If you select a high number of age bins, fewer images will be selected but the cohort will be more different from each other.
 
 
 
@@ -98,7 +98,7 @@ As you already guess, for the females in the second bin, does not matter how we 
 <img src="output/images/shared_3agebins.png" width="600">
 </p>
 
-# hint: you can generate this plots with
+# hint: you can generate these plots with
 
 ```
 python code/plots/count_shared_participants.py
@@ -109,18 +109,18 @@ python code/plots/count_shared_participants.py
 ### The statistical analysis is performed in the following fashion.
 
 1. Load the data
-2. Sample the data according different QC
+2. Sample the data according to different QC
 3. For each feature, separate the data for each sex/gender
 4. Perform a t-test between the feature distribution
 5. Save the p-value
-6. If the p-value is small, the features distributions are distint.
+6. If the p-value is small, the distributions of the features are distinct.
 
-For high and low high QC, you should run
+For high and low and high QC, you should run
 ```
 python code/statistics/statistics_univariate.py
 ```
 
-For random QC, the script is repeated N=20 times. You can set this values on the script and then run
+For random QC, the script is repeated N=20 times. You can set these values on the script and then run
 ```
 python code/statistics/statistics_univariate_randomQ_repeated.py
 ```
@@ -130,14 +130,14 @@ python code/statistics/statistics_univariate_randomQ_repeated.py
 
 ## There are two main ways to run the classification
 
-### For single site, the data is loaded, sampled, and splited in train/test folds using a 5 Repetitions 5 Folds cross validation
+### For a single site, the data is loaded, sampled, and split in train/test folds using a 5 Repetitions 5 Folds cross-validation
 
 For high and low high QC, you should run
 ```
 python code/sex_classicitation/sex_classification_single_site.py
 ```
 
-For random QC, the script is repeated N=20 times. You can set this values on the script and then run
+For random QC, the script is repeated N=20 times. You can set these values on the script and then run
 ```
 python code/statistics/sex_classification_single_site_randomQ_repeated.py
 ```
@@ -145,21 +145,14 @@ python code/statistics/sex_classification_single_site_randomQ_repeated.py
 
 
 
-### For pooled data, the data is loaded, sampled, and splited in train/test folds using a 5 Repetitions 5 Folds cross validation
+### For pooled data, the data is loaded, sampled, and split in train/test folds using a 5 Repetitions 5 Folds cross-validation
 
 For high and low high QC, you should run
 ```
 python code/sex_classicitation/sex_classification_pooled_data.py
 ```
 
-For random QC, the script is repeated N=20 times. You can set this values on the script and then run
+For random QC, the script is repeated N=20 times. You can set these values on the script and then run
 ```
 python code/statistics/sex_classification_pooled_data_randomQ_repeated.py
 ```
-
-# Main result. 
-## A: Results for site and pooled data using 10 age bins.
-## B: Results for site and pooled data using 3 age bins.
-<p align="center">
-<img src="output/images/ML_results.png" width="600">
-</p>

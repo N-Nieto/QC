@@ -105,5 +105,4 @@ dependencies:
 - xmltodict==0.13.0
 - zipp==3.15.0
 name: QC_env
-python_version: 3.9.2
 
