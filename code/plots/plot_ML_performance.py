@@ -17,7 +17,7 @@ plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 
 project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))             # noqa
 
-results_dir = "/output/refactor/ML/"
+results_dir = "/output/ML/"
 
 metric_to_plot = "AUC"
 

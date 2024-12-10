@@ -16,11 +16,6 @@ from lib.data_processing import ConfoundRegressor_TIV                           
 from lib.data_processing import keep_desired_age_range, get_age_bins                # noqa
 from lib.ml import classification_results_by_site                         # noqa
 
-
-# Directions (Indicate the sub folder inside /data)
-# the folder data is assumed to be in the same herarchy as the project folder
-data_dir = "/final_data_split/"
-qc_dir = "/qc/"
 save_dir = "/output/final/sex_classification/"
 # %%
 # Select dataset
@@ -58,7 +53,7 @@ for repeated in range(random_q_repeated):
 
         print(site)
         # Load data and prepare it
-        X, Y = load_data_and_qc(data_dir=data_dir, qc_dir=qc_dir, site=site)
+        X, Y = load_data_and_qc(site=site)
 
         Y = keep_desired_age_range(Y, low_cut_age, high_cut_age)
 

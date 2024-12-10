@@ -24,13 +24,13 @@ low_cut_age = 18
 high_cut_age = 80
 # Number of bins to split the age and keep the same number
 # of images in each age bin
-n_age_bins = 10
+n_age_bins = 3
 
 
 for row, site in enumerate(site_list):
 
     # Load data and prepare it
-    X, Y = load_data_and_qc(data_dir=data_dir, qc_dir=qc_dir, site=site)
+    X, Y = load_data_and_qc(site=site)
     print("wholedata " + site + str(Y.__len__()))
     Y = keep_desired_age_range(Y, low_cut_age, high_cut_age)
 

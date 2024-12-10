@@ -12,10 +12,6 @@ from lib.data_processing import ConfoundRegressor_TIV                   # noqa
 
 p_values = []  # To store p-values for each feature
 
-# Directions (Indicate the sub folder inside /data)
-# the folder data is assumed to be in the same herarchy as the project folder
-data_dir = "/final_data_split/"
-qc_dir = "/qc/"
 save_dir = "/output/statistics/"
 # %%
 # Select dataset
@@ -42,7 +38,7 @@ for repeated in range(random_q_repeated):
 
         print(site)
         # Load data and prepare it
-        X, Y = load_data_and_qc(data_dir=data_dir, qc_dir=qc_dir, site=site)
+        X, Y = load_data_and_qc(site=site)
         # This is the main function to obtain different cohorts from the data
         X, Y = balance_data_age_gender_Qsampling(X, Y, n_age_bins, sampling)
 

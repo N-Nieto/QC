@@ -14,11 +14,6 @@ from lib.data_loading import load_data_and_qc                                   
 from lib.data_processing import balance_data_age_gender_Qsampling, ConfoundRegressor_TIV                                               # noqa
 from lib.ml import classification_results_by_site                                                   # noqa
 
-
-# Directions (Indicate the sub folder inside /data)
-# the folder data is assumed to be in the same herarchy as the project folder
-data_dir = "/final_data_split/"
-qc_dir = "/qc/"
 save_dir = "/output/refactor/ML/"
 # %%
 # Select dataset
@@ -50,7 +45,7 @@ for col, sampling in enumerate(sampling_list):
 
         print(site)
         # Load data and prepare it
-        X, Y = load_data_and_qc(data_dir=data_dir, qc_dir=qc_dir, site=site)
+        X, Y = load_data_and_qc(site=site)
 
         # This is the main function to obtain different cohorts from the data
         X, Y = balance_data_age_gender_Qsampling(X, Y, n_age_bins, sampling)

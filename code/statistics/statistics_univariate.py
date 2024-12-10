@@ -12,15 +12,10 @@ from lib.data_processing import ConfoundRegressor_TIV               # noqa
 
 p_values = []  # To store p-values for each feature
 
-# Directions (Indicate the sub folder inside /data)
-# the folder data is assumed to be in the same herarchy as the project folder
-data_dir = "/final_data_split/"
-qc_dir = "/qc/"
 save_dir = "/output/refactor/statistics/"
 # %%
 # Select dataset
 site_list = ["SALD", "eNKI", "CamCAN"]
-# site_list = ["SALD"]
 
 # Age range
 low_cut_age = 18
@@ -45,14 +40,14 @@ for col, sampling in enumerate(sampling_list):
 
         print(site)
         # Load data and prepare it
-        X, Y = load_data_and_qc(data_dir=data_dir, qc_dir=qc_dir, site=site)
+        X, Y = load_data_and_qc(site=site)
 
         # This is the main function to obtain different cohorts from the data
         X, Y = balance_data_age_gender_Qsampling(X, Y, n_age_bins, sampling)
 
         X_pooled = pd.concat([X_pooled, X])
         Y_pooled = pd.concat([Y_pooled, Y])
-
+# %%
     Y_pooled["gender"] = Y_pooled["gender"].replace({"F": 0, "M": 1}).astype(int)       # noqa
     # If there are any missing values replace is with the mean of the
     # TIV (There are not many missing)

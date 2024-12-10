@@ -2,18 +2,18 @@ import pandas as pd
 import os
 
 
-def load_data_and_qc(data_dir, qc_dir, site):
+def load_data_and_qc(site):
     # Generate the path to the data.
-    # The data must be stored in a folder with the same herarchi as the project
+    # The data must be stored in "data" inside the repo folder
     data_folder_path = os.path.join(
         os.path.dirname(
             os.path.dirname(
-                os.path.dirname(os.path.abspath(__file__)))), 'data')
+                os.path.abspath(__file__))), 'data/')
 
-    X_data = pd.read_csv(data_folder_path + data_dir + "X_" + site + ".csv")
+    X_data = pd.read_csv(data_folder_path + "X_" + site + ".csv")
     X_data.dropna(axis=1, inplace=True)
-    Y_data = pd.read_csv(data_folder_path + data_dir + "Y_" + site + ".csv")
-    qc_data = pd.read_csv(data_folder_path + qc_dir+site+"_cat12.8.1_rois_thalamus.csv")    # noqa
+    Y_data = pd.read_csv(data_folder_path + "Y_" + site + ".csv")
+    qc_data = pd.read_csv(data_folder_path +"QC_" + site + ".csv")    # noqa
     qc_data.rename(columns={"SubjectID": "subject"}, inplace=True)
 
     # For the naming exeptions
