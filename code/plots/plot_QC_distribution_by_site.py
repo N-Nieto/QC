@@ -9,14 +9,10 @@ sys.path.append(project_root)
 from lib.data_processing import balance_data_age_gender_Qsampling # noqa
 from lib.data_loading import load_data_and_qc                           # noqa
 
-
-# Directions
-data_dir = "/final_data_split/"
-qc_dir = "/qc/"
 # %%
 # Select dataset
 site_list = ["SALD", "eNKI", "CamCAN"]
-# site_list = ["SALD"]
+site_list = ["AOMIC_ID1000", "1000Brains"]
 
 # Age range
 low_cut_age = 18
@@ -40,7 +36,7 @@ for row, site in enumerate(site_list):
         print(site)
         print(sampling)
         # Load data and prepare it
-        X, Y = load_data_and_qc(data_dir=data_dir, qc_dir=qc_dir, site=site)
+        X, Y = load_data_and_qc(site=site)
 
         # This is the main function to obtain different cohorts from the data
         X, Y = balance_data_age_gender_Qsampling(X, Y, n_age_bins, sampling)

@@ -16,6 +16,7 @@ save_dir = "/output/statistics/"
 # %%
 # Select dataset
 site_list = ["SALD", "eNKI", "CamCAN"]
+site_list = ["SALD", "eNKI", "CamCAN", "AOMIC_ID1000", "1000Brains"]
 
 # Age range
 low_cut_age = 18
@@ -23,7 +24,7 @@ high_cut_age = 80
 # Number of bins to split the age and keep the same number
 # of images in each age bin
 n_age_bins = 10
-random_q_repeated = 2
+random_q_repeated = 20
 
 # randomly select participants
 sampling = "random_Q"
@@ -91,8 +92,19 @@ for repeated in range(random_q_repeated):
         p_values_df = pd.concat([p_values_df, p_values_df_loop])
 
 # %%
-p_values_df.to_csv(project_root+save_dir+"statistic_test_"+str(n_age_bins)+"bins_"+str(random_q_repeated)+"repeated_random_sampling.csv")     # noqa
+p_values_df.to_csv(project_root+save_dir+"statistic_test_"+str(n_age_bins)+"bins_"+str(random_q_repeated)+"repeated_random_sampling_5_sites.csv")     # noqa
 # Add a red line to show the significance threshold (e.g., p=0.05)
 
 print("Experiment Done!")
+# %%
+p_value_threshold = 0.05/3747
+random_q_repetitions = 20
+significant_features = p_values_df[p_values_df["P-value"] < p_value_threshold]                        # noqa
+
+print("For "+sampling+": median pvalue: " + str(significant_features["P-value"].median()))                      # noqa
+print("For "+sampling+": Number of statistically significant features: " + str(significant_features.__len__()/random_q_repetitions)) # noqa
+
+
+
+
 # %%

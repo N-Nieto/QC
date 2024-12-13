@@ -16,6 +16,7 @@ save_dir = "/output/statistics/"
 # %%
 # Select dataset
 site_list = ["SALD", "eNKI", "CamCAN"]
+site_list = ["SALD", "eNKI", "CamCAN", "AOMIC_ID1000", "1000Brains"]
 
 
 # Age range
@@ -65,7 +66,7 @@ for col, sampling in enumerate(sampling_list):
     p_values = []  # To store p-values for each feature
     # Test for each feature if the gender distribution
     # of the features are different
-    # %%
+
     for feature in X.columns:
         # Split the feature data into two groups based on the binary target
         # (e.g., male vs. female)
@@ -87,7 +88,7 @@ for col, sampling in enumerate(sampling_list):
     })
 
     # Save the results for each sampling
-    # p_values_df.to_csv(project_root+save_dir+"statistic_test_"+str(n_age_bins)+"_bins_sampling_"+sampling+".csv")    # noqa
+    p_values_df.to_csv(project_root+save_dir+"statistic_test_"+str(n_age_bins)+"_bins_sampling_"+sampling+"_5_sites.csv")    # noqa
 
 print("Experiment Done!")
 

@@ -12,26 +12,20 @@ from lib.data_loading import load_data_and_qc                           # noqa
 from lib.data_processing import keep_desired_age_range, get_age_bins          # noqa
 
 
-site_list = ["SALD", "eNKI", "CamCAN"]
-
-# Directions
-data_dir = "/final_data_split/"
-qc_dir = "/qc/"
-
+site_list = ["SALD", "eNKI", "CamCAN", "AOMIC_ID1000", "1000Brains"]
 
 # Age range
 low_cut_age = 18
 high_cut_age = 80
 # Number of bins to split the age and keep the same number
 # of images in each age bin
-n_age_bins = 3
+n_age_bins = 10
 
 
 for row, site in enumerate(site_list):
 
     # Load data and prepare it
     X, Y = load_data_and_qc(site=site)
-    print("wholedata " + site + str(Y.__len__()))
     Y = keep_desired_age_range(Y, low_cut_age, high_cut_age)
 
     age_bins = get_age_bins(Y, n_age_bins)

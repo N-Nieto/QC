@@ -12,7 +12,7 @@ def load_data_and_qc(site):
 
     X_data = pd.read_csv(data_folder_path + "X_" + site + ".csv", index_col=0)
     Y_data = pd.read_csv(data_folder_path + "Y_" + site + ".csv", index_col=0)
-
+    X_data = X_data.dropna(axis=1)
     return X_data, Y_data
 
 

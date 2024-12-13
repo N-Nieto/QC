@@ -2,14 +2,12 @@
 
 ## About
 
-The Forschungszentrum Jülich Machine Learning Library
-
-It is currently being developed and maintained at the [Applied Machine Learning](https://www.fz-juelich.de/en/inm/inm-7/research-groups/applied-machine-learning-aml) group at [Forschungszentrum Juelich](https://www.fz-juelich.de/en), Germany.
+This library is currently being developed and maintained at the [Applied Machine Learning](https://www.fz-juelich.de/en/inm/inm-7/research-groups/applied-machine-learning-aml) group at [Forschungszentrum Juelich](https://www.fz-juelich.de/en), Germany.
 
 
 ## Overview
 
-This repository contains the scripts, data processing pipelines, and analysis code required to reproduce the results presented in the paper *"The impact of MRI image quality on statistical and predictive analysis on voxel-based morphology."* The study investigates how MRI image quality affects univariate statistical analyses and machine learning-based predictions in voxel-based morphology (VBM). By leveraging three large, publicly available datasets, the paper highlights the importance of image quality and sample size in neuroimaging research.
+This repository contains the scripts, data, and analysis code required to reproduce the results presented in the paper *"The impact of MRI image quality on statistical and predictive analysis on voxel-based morphology."* The study investigates how MRI image quality affects univariate statistical analyses and machine learning-based predictions in voxel-based morphology (VBM). By leveraging three large, publicly available datasets, the paper highlights the importance of image quality and sample size in neuroimaging research.
 
 **Paper Abstract:**
 

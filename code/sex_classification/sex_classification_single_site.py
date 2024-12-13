@@ -5,7 +5,6 @@ import pandas as pd
 import numpy as np
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import RepeatedStratifiedKFold
-pd.set_option('future.no_silent_downcasting', True)
 project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))             # noqa
 sys.path.append(project_root)
 
@@ -15,17 +14,17 @@ from lib.ml import classification_results_by_site                               
 
 
 # Save Direction
-save_dir = "/output/sex_classification/"
+save_dir = "/output/ML/"
 # %%
 # Select dataset
-site_list = ["SALD", "eNKI", "CamCAN"]
+site_list = ["SALD", "eNKI", "CamCAN", "AOMIC_ID1000", "1000Brains"]
 
 # Age range
 low_cut_age = 18
 high_cut_age = 80
 # Number of bins to split the age and keep the same number
 # of images in each age bin
-n_age_bins = 3
+n_age_bins = 10
 
 clf = LogisticRegression()
 confound_regressor = ConfoundRegressor_TIV()
@@ -100,6 +99,10 @@ results = pd.DataFrame(results,
                                 "Site"
                                 ])
 # %%
-results.to_csv(project_root+save_dir+"results_"+str(n_age_bins)+"bins_single_site_high_low_sampling_Q.csv")   # noqa
+results.to_csv(project_root+save_dir+"results_"+str(n_age_bins)+"bins_single_site_high_low_sampling_Q_AOMIC_1000brains.csv")   # noqa
 
 # %%
+import seaborn as sbn
+results_2_plot = results[results["Model"]=="Single site Test"]
+results_2_plot["Site"].replace({"['1000Brains']":"1000Brains","['AOMIC_ID1000']":"AOMIC_ID1000"},inplace=True)
+sbn.boxplot(data=results_2_plot, x="Site", y="AUC", hue="QC_Sampling")

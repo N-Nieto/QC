@@ -6,6 +6,15 @@ __pycache__/
 # C extensions
 *.so
 
+# Extra data
+data/X_AOMIC_ID1000.csv
+data/Y_AOMIC_ID1000.csv
+data/X_1000Brains.csv
+data/Y_1000Brains.csv
+
+merge_data.py
+shuffle_data.py
+
 # Distribution / packaging
 .Python
 build/

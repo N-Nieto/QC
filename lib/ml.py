@@ -46,14 +46,14 @@ def classification_results_by_site(i_fold: int, model: str,
                            bacc, auc, f1,
                            recall,
                            sampling,
-                           sites
+                           sites[0]
                            ])
         else:
             result.append([i_fold, model,
                            bacc, auc, f1,
                            recall,
                            sampling,
-                           sites,
+                           sites[0],
                            repeated
                            ])
     else:
