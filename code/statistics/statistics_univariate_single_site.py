@@ -1,0 +1,101 @@
+# %%
+import numpy as np
+import pandas as pd
+import sys
+from scipy.stats import ttest_ind
+import os
+project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))             # noqa
+sys.path.append(project_root)
+from lib.data_processing import balance_data_age_gender_Qsampling   # noqa
+from lib.data_loading import load_data_and_qc                       # noqa
+from lib.data_processing import ConfoundRegressor_TIV               # noqa
+
+p_values = []  # To store p-values for each feature
+
+save_dir = "/output/statistics/single_site/"
+# %%
+# Select dataset
+site_list = ["SALD", "eNKI", "CamCAN"]
+site_list = ["SALD", "eNKI", "CamCAN", "AOMIC_ID1000", "1000Brains"]
+
+
+# Age range
+low_cut_age = 18
+high_cut_age = 80
+# Number of bins to split the age and keep the same number
+# of images in each age bin
+n_age_bins = 10
+
+# low_Q retains the images with HIGHER IQR
+# high_Q retains the images with LOWER IQR
+sampling_list = ["low_Q"]
+
+confound_regressor = ConfoundRegressor_TIV()
+import seaborn as sbn
+import matplotlib.pyplot as plt
+for col, sampling in enumerate(sampling_list):
+    print(sampling)
+    # Create a dataframe to pool the data from different sites
+    # in each of the sampling schemes
+    X_pooled = pd.DataFrame()
+    Y_pooled = pd.DataFrame()
+    for row, site in enumerate(site_list):
+
+        print(site)
+        # Load data and prepare it
+        X, Y = load_data_and_qc(site=site)
+
+        # This is the main function to obtain different cohorts from the data
+        X, Y = balance_data_age_gender_Qsampling(X, Y, n_age_bins, sampling)
+
+        Y["gender"] = Y["gender"].replace({"F": 0, "M": 1}).astype(int)       # noqa
+        # If there are any missing values replace is with the mean of the
+        # TIV (There are not many missing)
+        Y["TIV"].replace({np.nan: Y["TIV"].mean()}, inplace=True)
+        TIV = Y["TIV"].astype(float).to_numpy()
+        age = Y["age"]
+
+        plt.figure()
+        sbn.swarmplot(data=Y, x="age", hue="gender")
+        Y = Y["gender"].to_numpy()
+
+        # Remove TIV as confound
+        confound_regressor.fit(X.to_numpy(), Y, TIV)
+        X_residual, Y_residual = confound_regressor.transform(X.to_numpy(),
+                                                              Y, TIV)
+
+        X = pd.DataFrame(X_residual)
+        p_values = []  # To store p-values for each feature
+        t_stats = []
+        print("Shape of X: ", X.shape)
+        # Test for each feature if the gender distribution
+        # of the features are different
+
+        # for feature in X.columns:
+        #     # Split the feature data into two groups based on the binary target
+        #     # (e.g., male vs. female)
+        #     group1 = X[Y == 0][feature]  # Group corresponding to target == 0
+        #     group2 = X[Y == 1][feature]  # Group corresponding to target == 1
+
+        #     # Perform independent t-test
+        #     t_stat, p_val = ttest_ind(group1, group2)
+
+        #     # Append the p-value for this feature
+        #     p_values.append(p_val)
+        #     t_stats.append(t_stat)
+        # # ----------------------------
+        # # 4. Convert p-values to a Pandas DataFrame for easy handling
+        # # ----------------------------
+        # p_values_df = pd.DataFrame({
+        #     'Feature': X.columns,
+        #     'P-value': p_values,
+        #     "t-stat": t_stats,
+        #     'sampling': sampling
+        # })
+
+        # # Save the results for each sampling
+        # p_values_df.to_csv(project_root+save_dir+"statistic_test_"+str(n_age_bins)+"_bins_sampling_"+sampling+"_"+site+".csv")    # noqa
+
+print("Experiment Done!")
+
+# %%

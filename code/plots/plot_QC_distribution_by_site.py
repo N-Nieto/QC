@@ -27,9 +27,9 @@ n_age_bins = 10
 # random dosen't care about QC
 sampling_list = ["low_Q", "high_Q", "random_Q"]
 
-i = 1
-plt.figure(figsize=[15, 15])
 
+plt.figure(figsize=[15, 15])
+print("hola")
 for row, site in enumerate(site_list):
     for col, sampling in enumerate(sampling_list):
 
@@ -40,15 +40,15 @@ for row, site in enumerate(site_list):
 
         # This is the main function to obtain different cohorts from the data
         X, Y = balance_data_age_gender_Qsampling(X, Y, n_age_bins, sampling)
-        plt.subplot(3, 3, i)
+        # plt.subplot(3, 3, i)
 
-        sbn.swarmplot(Y.IQR)
-        plt.title("QC data for site: "+site)
-        plt.ylabel("IQR")
-        plt.xlabel(sampling)
-        plt.ylim([1.5, 4.5])
-        plt.grid()
-
+        # sbn.swarmplot(Y.IQR)
+        # plt.title("QC data for site: "+site)
+        # plt.ylabel("IQR")
+        # plt.xlabel(sampling)
+        # plt.ylim([1.5, 4.5])
+        # plt.grid()
+        print(Y.IQR.median())
         i = i+1
 
 # %%

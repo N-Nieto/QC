@@ -5,7 +5,6 @@ import pandas as pd
 import numpy as np
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import RepeatedStratifiedKFold
-pd.set_option('future.no_silent_downcasting', True)
 project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))             # noqa
 sys.path.append(project_root)
 
@@ -16,10 +15,11 @@ from lib.data_processing import ConfoundRegressor_TIV                           
 from lib.data_processing import keep_desired_age_range, get_age_bins                # noqa
 from lib.ml import classification_results_by_site                         # noqa
 
-save_dir = "/output/final/sex_classification/"
+save_dir = "/output/ML/"
 # %%
 # Select dataset
 site_list = ["SALD", "eNKI", "CamCAN"]
+site_list = ["AOMIC_ID1000", "1000Brains"]
 
 # Age range
 low_cut_age = 18
@@ -38,7 +38,7 @@ kf_out = RepeatedStratifiedKFold(n_splits=5,
 # random dosen't care about QC
 sampling = "random_Q"
 
-random_q_repeated = 2
+random_q_repeated = 20
 
 results = []
 
@@ -47,6 +47,7 @@ IQR_std_loop = []
 IQR_meadian_loop = []
 site_loop = []
 for repeated in range(random_q_repeated):
+    print("Repetition")
     print(repeated)
 
     for row, site in enumerate(site_list):
@@ -122,6 +123,6 @@ results = pd.DataFrame(results,
                                 "Repeated"
                                 ])
 # %%
-results.to_csv(project_root+save_dir+"results_single_site_"+str(n_age_bins)+"bins_random_"+str(random_q_repeated)+"repetitions_random_Q.csv")   # noqa
+results.to_csv(project_root+save_dir+"results_single_site_"+str(n_age_bins)+"bins_random_"+str(random_q_repeated)+"repetitions_random_Q_AOMICID1000_10000brains.csv")   # noqa
 
 # %%

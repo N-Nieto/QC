@@ -99,7 +99,7 @@ results = pd.DataFrame(results,
                                 "Site"
                                 ])
 # %%
-results.to_csv(project_root+save_dir+"results_"+str(n_age_bins)+"bins_single_site_high_low_sampling_Q_AOMIC_1000brains.csv")   # noqa
+results.to_csv(project_root+save_dir+"results_"+str(n_age_bins)+"_bins_single_site_high_low_sampling_Q_AOMIC_1000brains.csv")   # noqa
 
 # %%
 import seaborn as sbn

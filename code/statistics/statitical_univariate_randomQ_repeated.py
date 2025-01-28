@@ -61,6 +61,7 @@ for repeated in range(random_q_repeated):
 
     X = pd.DataFrame(X_residual)
     p_values = []  # To store p-values for each feature
+    t_stats = []
     # Test for each feature if the gender distribution
     # of the features are different
     for feature in X.columns:
@@ -74,6 +75,8 @@ for repeated in range(random_q_repeated):
 
         # Append the p-value for this feature
         p_values.append(p_val)
+
+        t_stats.append(t_stat)
     # ----------------------------
     # 4. Convert p-values to a Pandas DataFrame for easy handling and saving
     # ----------------------------
@@ -81,12 +84,15 @@ for repeated in range(random_q_repeated):
         p_values_df = pd.DataFrame({
             'Feature': X.columns,
             'P-value': p_values,
+            "t-stat": t_stats,
+
             'sampling': sampling
         })
     else:
         p_values_df_loop = pd.DataFrame({
             'Feature': X.columns,
             'P-value': p_values,
+            "t-stat": t_stats,
             'sampling': sampling
         })
         p_values_df = pd.concat([p_values_df, p_values_df_loop])
@@ -103,8 +109,3 @@ significant_features = p_values_df[p_values_df["P-value"] < p_value_threshold]  
 
 print("For "+sampling+": median pvalue: " + str(significant_features["P-value"].median()))                      # noqa
 print("For "+sampling+": Number of statistically significant features: " + str(significant_features.__len__()/random_q_repetitions)) # noqa
-
-
-
-
-# %%

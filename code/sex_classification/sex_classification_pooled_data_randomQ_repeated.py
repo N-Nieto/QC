@@ -5,8 +5,6 @@ import os
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import RepeatedStratifiedKFold
 import numpy as np
-
-pd.set_option('future.no_silent_downcasting', True)
 project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))             # noqa
 sys.path.append(project_root)
 
@@ -14,17 +12,18 @@ from lib.data_loading import load_data_and_qc                                   
 from lib.data_processing import balance_data_age_gender_Qsampling, ConfoundRegressor_TIV                                               # noqa
 from lib.ml import classification_results_by_site                                                   # noqa
 
-save_dir = "/output/refactor/ML/"
+save_dir = "/output/ML/"
 # %%
 # Select dataset
 site_list = ["SALD", "eNKI", "CamCAN"]
+site_list = ["SALD", "eNKI", "CamCAN", "AOMIC_ID1000", "1000Brains"]
 
 # Age range
 low_cut_age = 18
 high_cut_age = 80
 # Number of bins to split the age and keep the same number
 # of images in each age bin
-n_age_bins = 3
+n_age_bins = 10
 
 clf = LogisticRegression()
 results = []
@@ -47,7 +46,8 @@ IQR_std_loop = []
 IQR_meadian_loop = []
 
 for repeated in range(random_q_repeated):
-    print(sampling)
+    print("Repeat number:")
+    print(repeated)
     X_pooled = pd.DataFrame()
     Y_pooled = pd.DataFrame()
     for row, site in enumerate(site_list):
@@ -60,7 +60,7 @@ for repeated in range(random_q_repeated):
         X, Y = balance_data_age_gender_Qsampling(X, Y, n_age_bins, sampling)
         X_pooled = pd.concat([X_pooled, X])
         Y_pooled = pd.concat([Y_pooled, Y])
-
+        Y_pooled["site"] = site
     Y_pooled["gender"] = Y_pooled["gender"].replace({"F": 0, "M": 1}).astype(int)       # noqa
     Y_pooled["TIV"] = Y_pooled["TIV"].replace({np.nan: Y_pooled["TIV"].mean()})
 
@@ -116,6 +116,6 @@ results = pd.DataFrame(results,
                                 "Repeated"
                                 ])
 # %%
-results.to_csv(project_root+save_dir+"results_pooled_data_"+str(n_age_bins)+"bins_random_"+str(random_q_repeated)+"_repetitions_random_Q.csv")   # noqa
+results.to_csv(project_root+save_dir+"results_pooled_data_"+str(n_age_bins)+"bins_random_"+str(random_q_repeated)+"_repetitions_random_Q_5_sites.csv")   # noqa
 
 # %%

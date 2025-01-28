@@ -15,7 +15,6 @@ p_values = []  # To store p-values for each feature
 save_dir = "/output/statistics/"
 # %%
 # Select dataset
-site_list = ["SALD", "eNKI", "CamCAN"]
 site_list = ["SALD", "eNKI", "CamCAN", "AOMIC_ID1000", "1000Brains"]
 
 
@@ -64,6 +63,7 @@ for col, sampling in enumerate(sampling_list):
 
     X = pd.DataFrame(X_residual)
     p_values = []  # To store p-values for each feature
+    t_stats = []
     # Test for each feature if the gender distribution
     # of the features are different
 
@@ -78,12 +78,15 @@ for col, sampling in enumerate(sampling_list):
 
         # Append the p-value for this feature
         p_values.append(p_val)
+        t_stats.append(t_stat)
+
     # ----------------------------
     # 4. Convert p-values to a Pandas DataFrame for easy handling and saving
     # ----------------------------
     p_values_df = pd.DataFrame({
         'Feature': X.columns,
         'P-value': p_values,
+        "t-stat": t_stats,
         'sampling': sampling
     })
 
