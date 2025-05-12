@@ -1,5 +1,5 @@
 import sys
-from pathlib import Path  # Better path handling
+from pathlib import Path
 
 
 def ensure_dir(target_path: str, emergency_base: str = "emergency_dir") -> None:

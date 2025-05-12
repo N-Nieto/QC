@@ -8,7 +8,7 @@ from sklearn.model_selection import permutation_test_score
 
 from pathlib import Path
 
-project_root = Path(__file__).parent.parent.parent
+project_root = Path().resolve().parents[1]
 sys.path.append(str(project_root))
 
 from lib.data_loading import load_data_and_qc  # noqa
