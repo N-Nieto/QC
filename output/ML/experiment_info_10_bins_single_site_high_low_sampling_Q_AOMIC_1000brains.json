@@ -1,0 +1,20 @@
+{
+    "experiment_description": "\nExperiment description:\nThis script is used to train a logistic regression model to classify sex based on\nbrain imaging data. The data is split into training and testing sets using repeated stratified k-fold cross-validation. The model is trained on the training set and evaluated on the testing set, with results saved to a CSV file. The script also generates a JSON file containing experiment information.\n\n",
+    "site_list": [
+        "SALD",
+        "eNKI",
+        "CamCAN",
+        "AOMIC_ID1000",
+        "1000Brains"
+    ],
+    "sampling_list": [
+        "low_Q",
+        "high_Q"
+    ],
+    "low_cut_age": 18,
+    "high_cut_age": 80,
+    "n_age_bins": 10,
+    "n_splits": 5,
+    "n_repeats": 5,
+    "random_state": 23
+}

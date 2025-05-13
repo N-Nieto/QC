@@ -1,0 +1,141 @@
+,Fold,Model,MAE,R2,QC_Sampling,Site
+0,0,QC Test,0.6426068892112731,-4.657941686570878,['random_Q'],"               0
+0     1000Brains
+1     1000Brains
+2     1000Brains
+3     1000Brains
+4     1000Brains
+...          ...
+1121  1000Brains
+1122  1000Brains
+1123  1000Brains
+1124  1000Brains
+1125  1000Brains
+
+[1126 rows x 1 columns]"
+1,0,QC Train,6.463630080384021e-14,1.0,['random_Q'],"               0
+0     1000Brains
+1     1000Brains
+2     1000Brains
+3     1000Brains
+4     1000Brains
+...          ...
+1121  1000Brains
+1122  1000Brains
+1123  1000Brains
+1124  1000Brains
+1125  1000Brains
+
+[1126 rows x 1 columns]"
+2,1,QC Test,0.5770777920724244,-3.2277416644829175,['random_Q'],"               0
+0     1000Brains
+1     1000Brains
+2     1000Brains
+3     1000Brains
+4     1000Brains
+...          ...
+1121  1000Brains
+1122  1000Brains
+1123  1000Brains
+1124  1000Brains
+1125  1000Brains
+
+[1126 rows x 1 columns]"
+3,1,QC Train,1.3440571741136425e-14,1.0,['random_Q'],"               0
+0     1000Brains
+1     1000Brains
+2     1000Brains
+3     1000Brains
+4     1000Brains
+...          ...
+1121  1000Brains
+1122  1000Brains
+1123  1000Brains
+1124  1000Brains
+1125  1000Brains
+
+[1126 rows x 1 columns]"
+4,2,QC Test,0.5706170984586744,-3.129823340982834,['random_Q'],"               0
+0     1000Brains
+1     1000Brains
+2     1000Brains
+3     1000Brains
+4     1000Brains
+...          ...
+1121  1000Brains
+1122  1000Brains
+1123  1000Brains
+1124  1000Brains
+1125  1000Brains
+
+[1126 rows x 1 columns]"
+5,2,QC Train,4.127897574539972e-14,1.0,['random_Q'],"               0
+0     1000Brains
+1     1000Brains
+2     1000Brains
+3     1000Brains
+4     1000Brains
+...          ...
+1121  1000Brains
+1122  1000Brains
+1123  1000Brains
+1124  1000Brains
+1125  1000Brains
+
+[1126 rows x 1 columns]"
+6,3,QC Test,0.5863259308253387,-3.318868334356882,['random_Q'],"               0
+0     1000Brains
+1     1000Brains
+2     1000Brains
+3     1000Brains
+4     1000Brains
+...          ...
+1121  1000Brains
+1122  1000Brains
+1123  1000Brains
+1124  1000Brains
+1125  1000Brains
+
+[1126 rows x 1 columns]"
+7,3,QC Train,1.3478254754083706e-14,1.0,['random_Q'],"               0
+0     1000Brains
+1     1000Brains
+2     1000Brains
+3     1000Brains
+4     1000Brains
+...          ...
+1121  1000Brains
+1122  1000Brains
+1123  1000Brains
+1124  1000Brains
+1125  1000Brains
+
+[1126 rows x 1 columns]"
+8,4,QC Test,0.586320662407517,-3.729365108910957,['random_Q'],"               0
+0     1000Brains
+1     1000Brains
+2     1000Brains
+3     1000Brains
+4     1000Brains
+...          ...
+1121  1000Brains
+1122  1000Brains
+1123  1000Brains
+1124  1000Brains
+1125  1000Brains
+
+[1126 rows x 1 columns]"
+9,4,QC Train,1.9258495790974883e-14,1.0,['random_Q'],"               0
+0     1000Brains
+1     1000Brains
+2     1000Brains
+3     1000Brains
+4     1000Brains
+...          ...
+1121  1000Brains
+1122  1000Brains
+1123  1000Brains
+1124  1000Brains
+1125  1000Brains
+
+[1126 rows x 1 columns]"

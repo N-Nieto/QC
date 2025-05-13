@@ -1,0 +1,115 @@
+{
+    "experiment_description": "\nExperiment description:\nThis script is used to train a logistic regression model to classify sex based on\nbrain imaging data. The data is split into training and testing sets using repeated stratified k-fold cross-validation. The model is trained on the training set and evaluated on the testing set, with results saved to a CSV file. The script also generates a JSON file containing experiment information.\nEach site is sampled with two different sampling methods: low_Q and high_Q.\nThe low_Q method retains images with higher IQR values, while the high_Q method retains images with lower IQR values. The script uses a confound regressor to regress out the effect of Total Intracranial Volume (TIV) from the data before training the model.\n",
+    "experiment_time": 552.3641327529986,
+    "site_list": [
+        "SALD",
+        "eNKI",
+        "CamCAN",
+        "AOMIC_ID1000",
+        "1000Brains"
+    ],
+    "sampling_list": [
+        "low_Q",
+        "high_Q"
+    ],
+    "low_cut_age": 18,
+    "high_cut_age": 80,
+    "n_age_bins": 10,
+    "n_splits": 5,
+    "n_repeats": 5,
+    "random_state": 23,
+    "sites_info": {
+        "SALD": {
+            "low_Q": {
+                "num_samples": 200,
+                "num_features": 3747,
+                "Q_mean": 2.5331,
+                "Q_std_dev": 0.2336,
+                "Q_min_value": 2.0921,
+                "Q_max_value": 3.4919
+            },
+            "high_Q": {
+                "num_samples": 200,
+                "num_features": 3747,
+                "Q_mean": 2.2299,
+                "Q_std_dev": 0.1251,
+                "Q_min_value": 1.9492,
+                "Q_max_value": 2.6931
+            }
+        },
+        "eNKI": {
+            "low_Q": {
+                "num_samples": 280,
+                "num_features": 3747,
+                "Q_mean": 2.4961,
+                "Q_std_dev": 0.3339,
+                "Q_min_value": 2.0119,
+                "Q_max_value": 4.232
+            },
+            "high_Q": {
+                "num_samples": 280,
+                "num_features": 3747,
+                "Q_mean": 2.0777,
+                "Q_std_dev": 0.1482,
+                "Q_min_value": 1.875,
+                "Q_max_value": 2.994
+            }
+        },
+        "CamCAN": {
+            "low_Q": {
+                "num_samples": 280,
+                "num_features": 3747,
+                "Q_mean": 2.574,
+                "Q_std_dev": 0.3216,
+                "Q_min_value": 2.0141,
+                "Q_max_value": 3.9315
+            },
+            "high_Q": {
+                "num_samples": 280,
+                "num_features": 3747,
+                "Q_mean": 2.1366,
+                "Q_std_dev": 0.1293,
+                "Q_min_value": 1.9044,
+                "Q_max_value": 3.3877
+            }
+        },
+        "AOMIC_ID1000": {
+            "low_Q": {
+                "num_samples": 624,
+                "num_features": 3747,
+                "Q_mean": 2.0823,
+                "Q_std_dev": 0.1513,
+                "Q_min_value": 1.879,
+                "Q_max_value": 3.2323
+            },
+            "high_Q": {
+                "num_samples": 624,
+                "num_features": 3747,
+                "Q_mean": 1.9174,
+                "Q_std_dev": 0.0841,
+                "Q_min_value": 1.8527,
+                "Q_max_value": 3.2323
+            }
+        },
+        "1000Brains": {
+            "low_Q": {
+                "num_samples": 144,
+                "num_features": 3747,
+                "Q_mean": 3.1476,
+                "Q_std_dev": 0.4506,
+                "Q_min_value": 2.2349,
+                "Q_max_value": 4.2529
+            },
+            "high_Q": {
+                "num_samples": 144,
+                "num_features": 3747,
+                "Q_mean": 2.1268,
+                "Q_std_dev": 0.1427,
+                "Q_min_value": 1.9198,
+                "Q_max_value": 3.0062
+            }
+        }
+    },
+    "classifier": "LogisticRegression",
+    "confound_regressor": "TIV"
+}

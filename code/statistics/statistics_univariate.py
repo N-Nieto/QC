@@ -3,19 +3,20 @@ import numpy as np
 import pandas as pd
 import sys
 from scipy.stats import ttest_ind
-import os
-project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))             # noqa
-sys.path.append(project_root)
+from pathlib import Path
+
+project_root = Path().resolve().parents[1]
+sys.path.append(str(project_root))
 from lib.data_processing import balance_data_age_gender_Qsampling   # noqa
 from lib.data_loading import load_data_and_qc                       # noqa
 from lib.data_processing import ConfoundRegressor_TIV               # noqa
 
 p_values = []  # To store p-values for each feature
 
-save_dir = "/output/statistics/"
+save_dir = project_root / "output" / "statistics/"
 # %%
 # Select dataset
-site_list = ["SALD", "eNKI", "CamCAN", "AOMIC_ID1000", "1000Brains"]
+site_list = ("SALD", "eNKI", "CamCAN", "AOMIC_ID1000", "1000Brains")
 
 
 # Age range
@@ -27,7 +28,7 @@ n_age_bins = 10
 
 # low_Q retains the images with HIGHER IQR
 # high_Q retains the images with LOWER IQR
-sampling_list = ["low_Q", "high_Q"]
+sampling_list = ("low_Q", "high_Q")
 
 confound_regressor = ConfoundRegressor_TIV()
 

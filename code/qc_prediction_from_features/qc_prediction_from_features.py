@@ -12,10 +12,17 @@ sys.path.append(str(project_root))
 from lib.data_loading import load_data_and_qc  # noqa
 from lib.ml import compute_regression_results  # noqa
 from lib.utils import ensure_dir  # noqa
+from lib.data_processing import keep_desired_age_range  # noqa
 
+# Save Direction
+save_dir = project_root / "output" / "QC_prediction_from_features" / "single_site"
 
-# Save Direction relative to the project root
-save_dir = project_root / Path("output/QC_prediction_from_features/")
+# Number of bins to split the age and keep the same number
+# of images in each age bin
+n_age_bins = 10  # experiments were run using 10 or 3
+
+save_dir = save_dir / ("N_bins_" + str(n_age_bins))
+ensure_dir(save_dir)
 # %%
 ensure_dir(save_dir)
 # %%
@@ -25,12 +32,20 @@ site_list = ("SALD", "eNKI", "CamCAN", "AOMIC_ID1000", "1000Brains")
 # Age range
 low_cut_age = 18
 high_cut_age = 80
-# Number of bins to split the age and keep the same number
-# of images in each age bin
-n_age_bins = 10
+
+
+# Age range
+LOW_CUT_AGE = 18
+HICH_CUT_AGE = 80
+
+N_SPLITS = 5
+N_REPEATS = 5
+RANDOM_STATE = 23
 
 clf = LinearRegression()
-kf_out = RepeatedKFold(n_splits=5, n_repeats=1, random_state=23)
+kf_out = RepeatedKFold(
+    n_splits=N_SPLITS, n_repeats=N_REPEATS, random_state=RANDOM_STATE
+)
 
 results = []
 sampling = ["random_Q"]
@@ -45,10 +60,12 @@ for row, site in enumerate(site_list):
     X, Y = load_data_and_qc(site=site)
 
     # This is the main function to obtain different cohorts from the data
-    # X, Y = balance_data_age_gender_Qsampling(X, Y, n_age_bins, Q_sampling=sampling)
+    Y = keep_desired_age_range(Y, LOW_CUT_AGE, HICH_CUT_AGE)
+    Y = Y.loc[Y.index]
+    X = X.loc[Y.index]
 
     Y["IQR"] = Y["IQR"].replace({np.nan: Y["IQR"].mean()})
-
+    # filter the data
     Y = Y["IQR"].to_numpy()
     X = X.to_numpy()
 

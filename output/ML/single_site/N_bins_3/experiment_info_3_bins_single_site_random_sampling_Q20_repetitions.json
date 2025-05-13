@@ -1,0 +1,1064 @@
+{
+    "experiment_description": "\nExperiment description:\nThis script is used to train a logistic regression model to classify sex based on\nbrain imaging data. The data is split into training and testing sets using repeated stratified k-fold cross-validation. The model is trained on the training set and evaluated on the testing set, with results saved to a CSV file. The script also generates a JSON file containing experiment information.\nEach site is sampled randomly: random_Q. The process is repeated to account for variability.\nThe script uses a confound regressor to regress out the effect of Total Intracranial Volume (TIV) from the data before training the model.\n",
+    "experiment_time": 5543.330025377996,
+    "site_list": [
+        "SALD",
+        "eNKI",
+        "CamCAN",
+        "AOMIC_ID1000",
+        "1000Brains"
+    ],
+    "sampling_list": [
+        "random_Q"
+    ],
+    "low_cut_age": 18,
+    "high_cut_age": 80,
+    "n_age_bins": 3,
+    "n_splits": 5,
+    "n_repeats": 5,
+    "random_state": 23,
+    "sites_info": {
+        "0": {
+            "SALD": {
+                "random_Q": {
+                    "num_samples": 336,
+                    "num_features": 3747,
+                    "Q_mean": 2.3617,
+                    "Q_std_dev": 0.2105,
+                    "Q_min_value": 2.0129,
+                    "Q_max_value": 3.4919
+                }
+            },
+            "eNKI": {
+                "random_Q": {
+                    "num_samples": 426,
+                    "num_features": 3747,
+                    "Q_mean": 2.2483,
+                    "Q_std_dev": 0.2694,
+                    "Q_min_value": 1.875,
+                    "Q_max_value": 4.232
+                }
+            },
+            "CamCAN": {
+                "random_Q": {
+                    "num_samples": 332,
+                    "num_features": 3747,
+                    "Q_mean": 2.2877,
+                    "Q_std_dev": 0.2605,
+                    "Q_min_value": 1.9044,
+                    "Q_max_value": 3.9315
+                }
+            },
+            "AOMIC_ID1000": {
+                "random_Q": {
+                    "num_samples": 702,
+                    "num_features": 3747,
+                    "Q_mean": 1.993,
+                    "Q_std_dev": 0.1271,
+                    "Q_min_value": 1.8531,
+                    "Q_max_value": 3.2323
+                }
+            },
+            "1000Brains": {
+                "random_Q": {
+                    "num_samples": 264,
+                    "num_features": 3747,
+                    "Q_mean": 2.4846,
+                    "Q_std_dev": 0.3382,
+                    "Q_min_value": 1.9536,
+                    "Q_max_value": 3.7944
+                }
+            }
+        },
+        "1": {
+            "SALD": {
+                "random_Q": {
+                    "num_samples": 336,
+                    "num_features": 3747,
+                    "Q_mean": 2.3658,
+                    "Q_std_dev": 0.2119,
+                    "Q_min_value": 1.9492,
+                    "Q_max_value": 3.4919
+                }
+            },
+            "eNKI": {
+                "random_Q": {
+                    "num_samples": 426,
+                    "num_features": 3747,
+                    "Q_mean": 2.2376,
+                    "Q_std_dev": 0.2478,
+                    "Q_min_value": 1.875,
+                    "Q_max_value": 3.9316
+                }
+            },
+            "CamCAN": {
+                "random_Q": {
+                    "num_samples": 332,
+                    "num_features": 3747,
+                    "Q_mean": 2.2824,
+                    "Q_std_dev": 0.2582,
+                    "Q_min_value": 1.9044,
+                    "Q_max_value": 3.9315
+                }
+            },
+            "AOMIC_ID1000": {
+                "random_Q": {
+                    "num_samples": 702,
+                    "num_features": 3747,
+                    "Q_mean": 1.9926,
+                    "Q_std_dev": 0.1212,
+                    "Q_min_value": 1.8527,
+                    "Q_max_value": 3.2323
+                }
+            },
+            "1000Brains": {
+                "random_Q": {
+                    "num_samples": 264,
+                    "num_features": 3747,
+                    "Q_mean": 2.5035,
+                    "Q_std_dev": 0.3545,
+                    "Q_min_value": 2.0017,
+                    "Q_max_value": 4.0401
+                }
+            }
+        },
+        "2": {
+            "SALD": {
+                "random_Q": {
+                    "num_samples": 336,
+                    "num_features": 3747,
+                    "Q_mean": 2.3656,
+                    "Q_std_dev": 0.2103,
+                    "Q_min_value": 1.9492,
+                    "Q_max_value": 3.4919
+                }
+            },
+            "eNKI": {
+                "random_Q": {
+                    "num_samples": 426,
+                    "num_features": 3747,
+                    "Q_mean": 2.252,
+                    "Q_std_dev": 0.266,
+                    "Q_min_value": 1.8824,
+                    "Q_max_value": 4.232
+                }
+            },
+            "CamCAN": {
+                "random_Q": {
+                    "num_samples": 332,
+                    "num_features": 3747,
+                    "Q_mean": 2.2823,
+                    "Q_std_dev": 0.2415,
+                    "Q_min_value": 1.9044,
+                    "Q_max_value": 3.6232
+                }
+            },
+            "AOMIC_ID1000": {
+                "random_Q": {
+                    "num_samples": 702,
+                    "num_features": 3747,
+                    "Q_mean": 1.9921,
+                    "Q_std_dev": 0.1291,
+                    "Q_min_value": 1.8527,
+                    "Q_max_value": 3.2323
+                }
+            },
+            "1000Brains": {
+                "random_Q": {
+                    "num_samples": 264,
+                    "num_features": 3747,
+                    "Q_mean": 2.4934,
+                    "Q_std_dev": 0.3737,
+                    "Q_min_value": 1.9707,
+                    "Q_max_value": 4.2529
+                }
+            }
+        },
+        "3": {
+            "SALD": {
+                "random_Q": {
+                    "num_samples": 336,
+                    "num_features": 3747,
+                    "Q_mean": 2.3582,
+                    "Q_std_dev": 0.2043,
+                    "Q_min_value": 1.9492,
+                    "Q_max_value": 3.4919
+                }
+            },
+            "eNKI": {
+                "random_Q": {
+                    "num_samples": 426,
+                    "num_features": 3747,
+                    "Q_mean": 2.2684,
+                    "Q_std_dev": 0.2934,
+                    "Q_min_value": 1.875,
+                    "Q_max_value": 4.232
+                }
+            },
+            "CamCAN": {
+                "random_Q": {
+                    "num_samples": 332,
+                    "num_features": 3747,
+                    "Q_mean": 2.2838,
+                    "Q_std_dev": 0.2566,
+                    "Q_min_value": 1.9044,
+                    "Q_max_value": 3.9315
+                }
+            },
+            "AOMIC_ID1000": {
+                "random_Q": {
+                    "num_samples": 702,
+                    "num_features": 3747,
+                    "Q_mean": 1.9974,
+                    "Q_std_dev": 0.1308,
+                    "Q_min_value": 1.8527,
+                    "Q_max_value": 3.2323
+                }
+            },
+            "1000Brains": {
+                "random_Q": {
+                    "num_samples": 264,
+                    "num_features": 3747,
+                    "Q_mean": 2.5035,
+                    "Q_std_dev": 0.3448,
+                    "Q_min_value": 1.9536,
+                    "Q_max_value": 3.5702
+                }
+            }
+        },
+        "4": {
+            "SALD": {
+                "random_Q": {
+                    "num_samples": 336,
+                    "num_features": 3747,
+                    "Q_mean": 2.3736,
+                    "Q_std_dev": 0.2128,
+                    "Q_min_value": 1.9492,
+                    "Q_max_value": 3.4919
+                }
+            },
+            "eNKI": {
+                "random_Q": {
+                    "num_samples": 426,
+                    "num_features": 3747,
+                    "Q_mean": 2.254,
+                    "Q_std_dev": 0.2655,
+                    "Q_min_value": 1.8824,
+                    "Q_max_value": 3.9701
+                }
+            },
+            "CamCAN": {
+                "random_Q": {
+                    "num_samples": 332,
+                    "num_features": 3747,
+                    "Q_mean": 2.2857,
+                    "Q_std_dev": 0.2519,
+                    "Q_min_value": 1.9044,
+                    "Q_max_value": 3.9315
+                }
+            },
+            "AOMIC_ID1000": {
+                "random_Q": {
+                    "num_samples": 702,
+                    "num_features": 3747,
+                    "Q_mean": 1.9964,
+                    "Q_std_dev": 0.1242,
+                    "Q_min_value": 1.8531,
+                    "Q_max_value": 3.2323
+                }
+            },
+            "1000Brains": {
+                "random_Q": {
+                    "num_samples": 264,
+                    "num_features": 3747,
+                    "Q_mean": 2.5019,
+                    "Q_std_dev": 0.3246,
+                    "Q_min_value": 2.0149,
+                    "Q_max_value": 3.4778
+                }
+            }
+        },
+        "5": {
+            "SALD": {
+                "random_Q": {
+                    "num_samples": 336,
+                    "num_features": 3747,
+                    "Q_mean": 2.369,
+                    "Q_std_dev": 0.2074,
+                    "Q_min_value": 2.0129,
+                    "Q_max_value": 3.2687
+                }
+            },
+            "eNKI": {
+                "random_Q": {
+                    "num_samples": 426,
+                    "num_features": 3747,
+                    "Q_mean": 2.2524,
+                    "Q_std_dev": 0.245,
+                    "Q_min_value": 1.8897,
+                    "Q_max_value": 3.9031
+                }
+            },
+            "CamCAN": {
+                "random_Q": {
+                    "num_samples": 332,
+                    "num_features": 3747,
+                    "Q_mean": 2.2894,
+                    "Q_std_dev": 0.2557,
+                    "Q_min_value": 1.9044,
+                    "Q_max_value": 3.9315
+                }
+            },
+            "AOMIC_ID1000": {
+                "random_Q": {
+                    "num_samples": 702,
+                    "num_features": 3747,
+                    "Q_mean": 1.9922,
+                    "Q_std_dev": 0.1263,
+                    "Q_min_value": 1.8527,
+                    "Q_max_value": 3.2323
+                }
+            },
+            "1000Brains": {
+                "random_Q": {
+                    "num_samples": 264,
+                    "num_features": 3747,
+                    "Q_mean": 2.5349,
+                    "Q_std_dev": 0.357,
+                    "Q_min_value": 2.0073,
+                    "Q_max_value": 4.0218
+                }
+            }
+        },
+        "6": {
+            "SALD": {
+                "random_Q": {
+                    "num_samples": 336,
+                    "num_features": 3747,
+                    "Q_mean": 2.3492,
+                    "Q_std_dev": 0.2093,
+                    "Q_min_value": 2.0129,
+                    "Q_max_value": 3.4919
+                }
+            },
+            "eNKI": {
+                "random_Q": {
+                    "num_samples": 426,
+                    "num_features": 3747,
+                    "Q_mean": 2.2712,
+                    "Q_std_dev": 0.2801,
+                    "Q_min_value": 1.8824,
+                    "Q_max_value": 3.9701
+                }
+            },
+            "CamCAN": {
+                "random_Q": {
+                    "num_samples": 332,
+                    "num_features": 3747,
+                    "Q_mean": 2.2797,
+                    "Q_std_dev": 0.2482,
+                    "Q_min_value": 1.9044,
+                    "Q_max_value": 3.9315
+                }
+            },
+            "AOMIC_ID1000": {
+                "random_Q": {
+                    "num_samples": 702,
+                    "num_features": 3747,
+                    "Q_mean": 1.9953,
+                    "Q_std_dev": 0.1312,
+                    "Q_min_value": 1.8527,
+                    "Q_max_value": 3.2323
+                }
+            },
+            "1000Brains": {
+                "random_Q": {
+                    "num_samples": 264,
+                    "num_features": 3747,
+                    "Q_mean": 2.4893,
+                    "Q_std_dev": 0.3374,
+                    "Q_min_value": 1.9536,
+                    "Q_max_value": 3.6174
+                }
+            }
+        },
+        "7": {
+            "SALD": {
+                "random_Q": {
+                    "num_samples": 336,
+                    "num_features": 3747,
+                    "Q_mean": 2.3729,
+                    "Q_std_dev": 0.219,
+                    "Q_min_value": 2.0129,
+                    "Q_max_value": 3.4919
+                }
+            },
+            "eNKI": {
+                "random_Q": {
+                    "num_samples": 426,
+                    "num_features": 3747,
+                    "Q_mean": 2.2595,
+                    "Q_std_dev": 0.2908,
+                    "Q_min_value": 1.9001,
+                    "Q_max_value": 4.232
+                }
+            },
+            "CamCAN": {
+                "random_Q": {
+                    "num_samples": 332,
+                    "num_features": 3747,
+                    "Q_mean": 2.2887,
+                    "Q_std_dev": 0.2628,
+                    "Q_min_value": 1.9044,
+                    "Q_max_value": 3.9315
+                }
+            },
+            "AOMIC_ID1000": {
+                "random_Q": {
+                    "num_samples": 702,
+                    "num_features": 3747,
+                    "Q_mean": 1.9939,
+                    "Q_std_dev": 0.1206,
+                    "Q_min_value": 1.8527,
+                    "Q_max_value": 3.2323
+                }
+            },
+            "1000Brains": {
+                "random_Q": {
+                    "num_samples": 264,
+                    "num_features": 3747,
+                    "Q_mean": 2.4886,
+                    "Q_std_dev": 0.3726,
+                    "Q_min_value": 1.9536,
+                    "Q_max_value": 4.1078
+                }
+            }
+        },
+        "8": {
+            "SALD": {
+                "random_Q": {
+                    "num_samples": 336,
+                    "num_features": 3747,
+                    "Q_mean": 2.3701,
+                    "Q_std_dev": 0.2151,
+                    "Q_min_value": 2.0129,
+                    "Q_max_value": 3.4919
+                }
+            },
+            "eNKI": {
+                "random_Q": {
+                    "num_samples": 426,
+                    "num_features": 3747,
+                    "Q_mean": 2.2461,
+                    "Q_std_dev": 0.25,
+                    "Q_min_value": 1.8824,
+                    "Q_max_value": 3.9316
+                }
+            },
+            "CamCAN": {
+                "random_Q": {
+                    "num_samples": 332,
+                    "num_features": 3747,
+                    "Q_mean": 2.2821,
+                    "Q_std_dev": 0.2577,
+                    "Q_min_value": 1.9044,
+                    "Q_max_value": 3.9315
+                }
+            },
+            "AOMIC_ID1000": {
+                "random_Q": {
+                    "num_samples": 702,
+                    "num_features": 3747,
+                    "Q_mean": 1.9938,
+                    "Q_std_dev": 0.1184,
+                    "Q_min_value": 1.8527,
+                    "Q_max_value": 3.2323
+                }
+            },
+            "1000Brains": {
+                "random_Q": {
+                    "num_samples": 264,
+                    "num_features": 3747,
+                    "Q_mean": 2.5186,
+                    "Q_std_dev": 0.3973,
+                    "Q_min_value": 1.9536,
+                    "Q_max_value": 4.2529
+                }
+            }
+        },
+        "9": {
+            "SALD": {
+                "random_Q": {
+                    "num_samples": 336,
+                    "num_features": 3747,
+                    "Q_mean": 2.3695,
+                    "Q_std_dev": 0.2188,
+                    "Q_min_value": 2.0129,
+                    "Q_max_value": 3.4919
+                }
+            },
+            "eNKI": {
+                "random_Q": {
+                    "num_samples": 426,
+                    "num_features": 3747,
+                    "Q_mean": 2.2549,
+                    "Q_std_dev": 0.2992,
+                    "Q_min_value": 1.8824,
+                    "Q_max_value": 4.232
+                }
+            },
+            "CamCAN": {
+                "random_Q": {
+                    "num_samples": 332,
+                    "num_features": 3747,
+                    "Q_mean": 2.2843,
+                    "Q_std_dev": 0.25,
+                    "Q_min_value": 1.9044,
+                    "Q_max_value": 3.9315
+                }
+            },
+            "AOMIC_ID1000": {
+                "random_Q": {
+                    "num_samples": 702,
+                    "num_features": 3747,
+                    "Q_mean": 1.9937,
+                    "Q_std_dev": 0.1191,
+                    "Q_min_value": 1.8527,
+                    "Q_max_value": 3.2323
+                }
+            },
+            "1000Brains": {
+                "random_Q": {
+                    "num_samples": 264,
+                    "num_features": 3747,
+                    "Q_mean": 2.4828,
+                    "Q_std_dev": 0.3657,
+                    "Q_min_value": 1.9707,
+                    "Q_max_value": 4.0976
+                }
+            }
+        },
+        "10": {
+            "SALD": {
+                "random_Q": {
+                    "num_samples": 336,
+                    "num_features": 3747,
+                    "Q_mean": 2.377,
+                    "Q_std_dev": 0.2179,
+                    "Q_min_value": 2.0129,
+                    "Q_max_value": 3.4919
+                }
+            },
+            "eNKI": {
+                "random_Q": {
+                    "num_samples": 426,
+                    "num_features": 3747,
+                    "Q_mean": 2.2656,
+                    "Q_std_dev": 0.3028,
+                    "Q_min_value": 1.875,
+                    "Q_max_value": 4.232
+                }
+            },
+            "CamCAN": {
+                "random_Q": {
+                    "num_samples": 332,
+                    "num_features": 3747,
+                    "Q_mean": 2.2886,
+                    "Q_std_dev": 0.2463,
+                    "Q_min_value": 1.9044,
+                    "Q_max_value": 3.6232
+                }
+            },
+            "AOMIC_ID1000": {
+                "random_Q": {
+                    "num_samples": 702,
+                    "num_features": 3747,
+                    "Q_mean": 1.9934,
+                    "Q_std_dev": 0.1192,
+                    "Q_min_value": 1.8531,
+                    "Q_max_value": 3.2323
+                }
+            },
+            "1000Brains": {
+                "random_Q": {
+                    "num_samples": 264,
+                    "num_features": 3747,
+                    "Q_mean": 2.5286,
+                    "Q_std_dev": 0.3831,
+                    "Q_min_value": 1.9536,
+                    "Q_max_value": 4.1423
+                }
+            }
+        },
+        "11": {
+            "SALD": {
+                "random_Q": {
+                    "num_samples": 336,
+                    "num_features": 3747,
+                    "Q_mean": 2.3679,
+                    "Q_std_dev": 0.216,
+                    "Q_min_value": 1.9492,
+                    "Q_max_value": 3.4919
+                }
+            },
+            "eNKI": {
+                "random_Q": {
+                    "num_samples": 426,
+                    "num_features": 3747,
+                    "Q_mean": 2.2469,
+                    "Q_std_dev": 0.2632,
+                    "Q_min_value": 1.875,
+                    "Q_max_value": 3.9316
+                }
+            },
+            "CamCAN": {
+                "random_Q": {
+                    "num_samples": 332,
+                    "num_features": 3747,
+                    "Q_mean": 2.2765,
+                    "Q_std_dev": 0.2329,
+                    "Q_min_value": 1.9044,
+                    "Q_max_value": 3.6232
+                }
+            },
+            "AOMIC_ID1000": {
+                "random_Q": {
+                    "num_samples": 702,
+                    "num_features": 3747,
+                    "Q_mean": 1.9876,
+                    "Q_std_dev": 0.1087,
+                    "Q_min_value": 1.8527,
+                    "Q_max_value": 3.2323
+                }
+            },
+            "1000Brains": {
+                "random_Q": {
+                    "num_samples": 264,
+                    "num_features": 3747,
+                    "Q_mean": 2.4747,
+                    "Q_std_dev": 0.335,
+                    "Q_min_value": 2.0029,
+                    "Q_max_value": 4.1803
+                }
+            }
+        },
+        "12": {
+            "SALD": {
+                "random_Q": {
+                    "num_samples": 336,
+                    "num_features": 3747,
+                    "Q_mean": 2.3691,
+                    "Q_std_dev": 0.2105,
+                    "Q_min_value": 2.0129,
+                    "Q_max_value": 3.4919
+                }
+            },
+            "eNKI": {
+                "random_Q": {
+                    "num_samples": 426,
+                    "num_features": 3747,
+                    "Q_mean": 2.2648,
+                    "Q_std_dev": 0.2911,
+                    "Q_min_value": 1.8897,
+                    "Q_max_value": 4.232
+                }
+            },
+            "CamCAN": {
+                "random_Q": {
+                    "num_samples": 332,
+                    "num_features": 3747,
+                    "Q_mean": 2.286,
+                    "Q_std_dev": 0.251,
+                    "Q_min_value": 1.9116,
+                    "Q_max_value": 3.9315
+                }
+            },
+            "AOMIC_ID1000": {
+                "random_Q": {
+                    "num_samples": 702,
+                    "num_features": 3747,
+                    "Q_mean": 1.9945,
+                    "Q_std_dev": 0.129,
+                    "Q_min_value": 1.8531,
+                    "Q_max_value": 3.2323
+                }
+            },
+            "1000Brains": {
+                "random_Q": {
+                    "num_samples": 264,
+                    "num_features": 3747,
+                    "Q_mean": 2.5194,
+                    "Q_std_dev": 0.3559,
+                    "Q_min_value": 1.9536,
+                    "Q_max_value": 3.9022
+                }
+            }
+        },
+        "13": {
+            "SALD": {
+                "random_Q": {
+                    "num_samples": 336,
+                    "num_features": 3747,
+                    "Q_mean": 2.3635,
+                    "Q_std_dev": 0.21,
+                    "Q_min_value": 2.0129,
+                    "Q_max_value": 3.4919
+                }
+            },
+            "eNKI": {
+                "random_Q": {
+                    "num_samples": 426,
+                    "num_features": 3747,
+                    "Q_mean": 2.2626,
+                    "Q_std_dev": 0.2832,
+                    "Q_min_value": 1.8824,
+                    "Q_max_value": 3.9316
+                }
+            },
+            "CamCAN": {
+                "random_Q": {
+                    "num_samples": 332,
+                    "num_features": 3747,
+                    "Q_mean": 2.2865,
+                    "Q_std_dev": 0.2543,
+                    "Q_min_value": 1.9044,
+                    "Q_max_value": 3.9315
+                }
+            },
+            "AOMIC_ID1000": {
+                "random_Q": {
+                    "num_samples": 702,
+                    "num_features": 3747,
+                    "Q_mean": 1.9921,
+                    "Q_std_dev": 0.1232,
+                    "Q_min_value": 1.8527,
+                    "Q_max_value": 3.2323
+                }
+            },
+            "1000Brains": {
+                "random_Q": {
+                    "num_samples": 264,
+                    "num_features": 3747,
+                    "Q_mean": 2.5234,
+                    "Q_std_dev": 0.3551,
+                    "Q_min_value": 1.9198,
+                    "Q_max_value": 4.0401
+                }
+            }
+        },
+        "14": {
+            "SALD": {
+                "random_Q": {
+                    "num_samples": 336,
+                    "num_features": 3747,
+                    "Q_mean": 2.3684,
+                    "Q_std_dev": 0.208,
+                    "Q_min_value": 2.0129,
+                    "Q_max_value": 3.4919
+                }
+            },
+            "eNKI": {
+                "random_Q": {
+                    "num_samples": 426,
+                    "num_features": 3747,
+                    "Q_mean": 2.2544,
+                    "Q_std_dev": 0.2684,
+                    "Q_min_value": 1.8824,
+                    "Q_max_value": 3.9701
+                }
+            },
+            "CamCAN": {
+                "random_Q": {
+                    "num_samples": 332,
+                    "num_features": 3747,
+                    "Q_mean": 2.2845,
+                    "Q_std_dev": 0.2537,
+                    "Q_min_value": 1.9044,
+                    "Q_max_value": 3.9315
+                }
+            },
+            "AOMIC_ID1000": {
+                "random_Q": {
+                    "num_samples": 702,
+                    "num_features": 3747,
+                    "Q_mean": 1.9883,
+                    "Q_std_dev": 0.1134,
+                    "Q_min_value": 1.8531,
+                    "Q_max_value": 3.2323
+                }
+            },
+            "1000Brains": {
+                "random_Q": {
+                    "num_samples": 264,
+                    "num_features": 3747,
+                    "Q_mean": 2.4799,
+                    "Q_std_dev": 0.3477,
+                    "Q_min_value": 1.9536,
+                    "Q_max_value": 4.0401
+                }
+            }
+        },
+        "15": {
+            "SALD": {
+                "random_Q": {
+                    "num_samples": 336,
+                    "num_features": 3747,
+                    "Q_mean": 2.3663,
+                    "Q_std_dev": 0.2167,
+                    "Q_min_value": 1.9492,
+                    "Q_max_value": 3.4919
+                }
+            },
+            "eNKI": {
+                "random_Q": {
+                    "num_samples": 426,
+                    "num_features": 3747,
+                    "Q_mean": 2.2543,
+                    "Q_std_dev": 0.2855,
+                    "Q_min_value": 1.875,
+                    "Q_max_value": 4.232
+                }
+            },
+            "CamCAN": {
+                "random_Q": {
+                    "num_samples": 332,
+                    "num_features": 3747,
+                    "Q_mean": 2.2791,
+                    "Q_std_dev": 0.2543,
+                    "Q_min_value": 1.9044,
+                    "Q_max_value": 3.9315
+                }
+            },
+            "AOMIC_ID1000": {
+                "random_Q": {
+                    "num_samples": 702,
+                    "num_features": 3747,
+                    "Q_mean": 1.9896,
+                    "Q_std_dev": 0.1185,
+                    "Q_min_value": 1.8531,
+                    "Q_max_value": 3.2323
+                }
+            },
+            "1000Brains": {
+                "random_Q": {
+                    "num_samples": 264,
+                    "num_features": 3747,
+                    "Q_mean": 2.5154,
+                    "Q_std_dev": 0.3538,
+                    "Q_min_value": 1.9536,
+                    "Q_max_value": 4.1803
+                }
+            }
+        },
+        "16": {
+            "SALD": {
+                "random_Q": {
+                    "num_samples": 336,
+                    "num_features": 3747,
+                    "Q_mean": 2.3549,
+                    "Q_std_dev": 0.203,
+                    "Q_min_value": 1.9492,
+                    "Q_max_value": 3.2008
+                }
+            },
+            "eNKI": {
+                "random_Q": {
+                    "num_samples": 426,
+                    "num_features": 3747,
+                    "Q_mean": 2.2526,
+                    "Q_std_dev": 0.2629,
+                    "Q_min_value": 1.875,
+                    "Q_max_value": 4.232
+                }
+            },
+            "CamCAN": {
+                "random_Q": {
+                    "num_samples": 332,
+                    "num_features": 3747,
+                    "Q_mean": 2.281,
+                    "Q_std_dev": 0.2612,
+                    "Q_min_value": 1.9044,
+                    "Q_max_value": 3.9315
+                }
+            },
+            "AOMIC_ID1000": {
+                "random_Q": {
+                    "num_samples": 702,
+                    "num_features": 3747,
+                    "Q_mean": 1.9976,
+                    "Q_std_dev": 0.1244,
+                    "Q_min_value": 1.8531,
+                    "Q_max_value": 3.2323
+                }
+            },
+            "1000Brains": {
+                "random_Q": {
+                    "num_samples": 264,
+                    "num_features": 3747,
+                    "Q_mean": 2.5249,
+                    "Q_std_dev": 0.3919,
+                    "Q_min_value": 1.9707,
+                    "Q_max_value": 4.1803
+                }
+            }
+        },
+        "17": {
+            "SALD": {
+                "random_Q": {
+                    "num_samples": 336,
+                    "num_features": 3747,
+                    "Q_mean": 2.3567,
+                    "Q_std_dev": 0.2031,
+                    "Q_min_value": 1.9492,
+                    "Q_max_value": 3.4919
+                }
+            },
+            "eNKI": {
+                "random_Q": {
+                    "num_samples": 426,
+                    "num_features": 3747,
+                    "Q_mean": 2.2673,
+                    "Q_std_dev": 0.2787,
+                    "Q_min_value": 1.8824,
+                    "Q_max_value": 4.232
+                }
+            },
+            "CamCAN": {
+                "random_Q": {
+                    "num_samples": 332,
+                    "num_features": 3747,
+                    "Q_mean": 2.2768,
+                    "Q_std_dev": 0.2436,
+                    "Q_min_value": 1.9044,
+                    "Q_max_value": 3.6232
+                }
+            },
+            "AOMIC_ID1000": {
+                "random_Q": {
+                    "num_samples": 702,
+                    "num_features": 3747,
+                    "Q_mean": 1.9925,
+                    "Q_std_dev": 0.1252,
+                    "Q_min_value": 1.8531,
+                    "Q_max_value": 3.2323
+                }
+            },
+            "1000Brains": {
+                "random_Q": {
+                    "num_samples": 264,
+                    "num_features": 3747,
+                    "Q_mean": 2.4925,
+                    "Q_std_dev": 0.3349,
+                    "Q_min_value": 2.0022,
+                    "Q_max_value": 4.1423
+                }
+            }
+        },
+        "18": {
+            "SALD": {
+                "random_Q": {
+                    "num_samples": 336,
+                    "num_features": 3747,
+                    "Q_mean": 2.3614,
+                    "Q_std_dev": 0.2129,
+                    "Q_min_value": 1.9492,
+                    "Q_max_value": 3.4919
+                }
+            },
+            "eNKI": {
+                "random_Q": {
+                    "num_samples": 426,
+                    "num_features": 3747,
+                    "Q_mean": 2.2607,
+                    "Q_std_dev": 0.2788,
+                    "Q_min_value": 1.8897,
+                    "Q_max_value": 4.232
+                }
+            },
+            "CamCAN": {
+                "random_Q": {
+                    "num_samples": 332,
+                    "num_features": 3747,
+                    "Q_mean": 2.2741,
+                    "Q_std_dev": 0.237,
+                    "Q_min_value": 1.9044,
+                    "Q_max_value": 3.6232
+                }
+            },
+            "AOMIC_ID1000": {
+                "random_Q": {
+                    "num_samples": 702,
+                    "num_features": 3747,
+                    "Q_mean": 1.9932,
+                    "Q_std_dev": 0.1234,
+                    "Q_min_value": 1.8527,
+                    "Q_max_value": 3.2323
+                }
+            },
+            "1000Brains": {
+                "random_Q": {
+                    "num_samples": 264,
+                    "num_features": 3747,
+                    "Q_mean": 2.5178,
+                    "Q_std_dev": 0.3756,
+                    "Q_min_value": 1.9707,
+                    "Q_max_value": 4.2529
+                }
+            }
+        },
+        "19": {
+            "SALD": {
+                "random_Q": {
+                    "num_samples": 336,
+                    "num_features": 3747,
+                    "Q_mean": 2.3623,
+                    "Q_std_dev": 0.2022,
+                    "Q_min_value": 2.0129,
+                    "Q_max_value": 3.4919
+                }
+            },
+            "eNKI": {
+                "random_Q": {
+                    "num_samples": 426,
+                    "num_features": 3747,
+                    "Q_mean": 2.2484,
+                    "Q_std_dev": 0.2687,
+                    "Q_min_value": 1.875,
+                    "Q_max_value": 3.9316
+                }
+            },
+            "CamCAN": {
+                "random_Q": {
+                    "num_samples": 332,
+                    "num_features": 3747,
+                    "Q_mean": 2.2839,
+                    "Q_std_dev": 0.2565,
+                    "Q_min_value": 1.9044,
+                    "Q_max_value": 3.9315
+                }
+            },
+            "AOMIC_ID1000": {
+                "random_Q": {
+                    "num_samples": 702,
+                    "num_features": 3747,
+                    "Q_mean": 1.9944,
+                    "Q_std_dev": 0.1336,
+                    "Q_min_value": 1.8527,
+                    "Q_max_value": 3.2323
+                }
+            },
+            "1000Brains": {
+                "random_Q": {
+                    "num_samples": 264,
+                    "num_features": 3747,
+                    "Q_mean": 2.4928,
+                    "Q_std_dev": 0.357,
+                    "Q_min_value": 1.9536,
+                    "Q_max_value": 4.1423
+                }
+            }
+        }
+    },
+    "classifier": "LogisticRegression",
+    "confound_regressor": "TIV"
+}

@@ -1,0 +1,35 @@
+{
+    "experiment_description": "\nExperiment description:\nThis script is used to train a logistic regression model to classify sex based on\nbrain imaging data. The data is split into training and testing sets using repeated stratified k-fold cross-validation. The model is trained on the training set and evaluated on the testing set, with results saved to a CSV file. The script also generates a JSON file containing experiment information.\nAll sites are pooled together and then they are sampled with two different sampling methods: low_Q and high_Q.\nThe low_Q method retains images with higher IQR values, while the high_Q method retains images with lower IQR values. The script uses a confound regressor to regress out the effect of Total Intracranial Volume (TIV) from the data before training the model.\n",
+    "experiment_time": 241.15354371500143,
+    "site_list": [
+        "SALD",
+        "eNKI",
+        "CamCAN",
+        "AOMIC_ID1000",
+        "1000Brains"
+    ],
+    "sampling_list": [
+        "low_Q",
+        "high_Q"
+    ],
+    "low_cut_age": 18,
+    "high_cut_age": 80,
+    "n_age_bins": 3,
+    "n_splits": 5,
+    "n_repeats": 5,
+    "random_state": 23,
+    "sites_info": {
+        "Pooled_Data": {
+            "high_Q": {
+                "num_samples": 2060,
+                "num_features": 3747,
+                "Q_mean": 2.1159,
+                "Q_std_dev": 0.2007,
+                "Q_min_value": 1.8527,
+                "Q_max_value": 3.6232
+            }
+        }
+    },
+    "classifier": "LogisticRegression",
+    "confound_regressor": "TIV"
+}

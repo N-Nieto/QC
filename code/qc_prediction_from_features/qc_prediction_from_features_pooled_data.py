@@ -12,7 +12,7 @@ sys.path.append(str(project_root))
 from lib.data_loading import load_data_and_qc  # noqa
 from lib.ml import compute_regression_results  # noqa
 from lib.utils import ensure_dir  # noqa
-
+from lib.data_processing import keep_desired_age_range  # noqa
 
 # Save Direction relative to the project root
 save_dir = project_root / Path("output/QC_prediction_from_features/")
@@ -30,7 +30,7 @@ high_cut_age = 80
 n_age_bins = 10
 
 clf = LinearRegression()
-kf_out = RepeatedKFold(n_splits=5, n_repeats=1, random_state=23)
+kf_out = RepeatedKFold(n_splits=5, n_repeats=5, random_state=23)
 
 results = []
 sampling = ["random_Q"]
@@ -48,8 +48,9 @@ for row, site in enumerate(site_list):
     X, Y = load_data_and_qc(site=site)
 
     # This is the main function to obtain different cohorts from the data
-    # X, Y = balance_data_age_gender_Qsampling(X, Y, n_age_bins, Q_sampling=sampling)
-
+    Y = keep_desired_age_range(Y, low_cut_age, high_cut_age)
+    Y = Y.loc[Y.index]
+    X = X.loc[Y.index]
     Y["IQR"] = Y["IQR"].replace({np.nan: Y["IQR"].mean()})
 
     Y_site = Y["IQR"]

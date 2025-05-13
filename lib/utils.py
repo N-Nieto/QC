@@ -18,13 +18,13 @@ def ensure_dir(target_path: str, emergency_base: str = "emergency_dir") -> None:
     emergency_dir = Path.cwd() / emergency_base  # Emergency dir in current working dir
 
     if target_path.exists():
-        print(f"Directory already exists at: '{target_path}'")
+        print(f"Directory already exists at:\n '{target_path}'")
         return
 
     try:
         # Attempt to create target directory
         target_path.mkdir(parents=True, exist_ok=True)
-        print(f"Directory created at: '{target_path}'")
+        print(f"Directory created at:\n'{target_path}'")
         return
     except (OSError, PermissionError) as e:
         # Fallback: Create emergency directory
@@ -35,5 +35,5 @@ def ensure_dir(target_path: str, emergency_base: str = "emergency_dir") -> None:
         )
         emergency_dir.mkdir(exist_ok=True)  # Safe by design (current dir is writable)
         if emergency_dir.exists():
-            print(f"Emergency directory successfully created at: '{emergency_dir}'")
+            print(f"Emergency directory successfully created at:\n'{emergency_dir}'")
         return

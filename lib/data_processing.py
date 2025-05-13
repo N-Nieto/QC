@@ -31,7 +31,7 @@ def get_min_common_number_images_in_age_bins(Y_data, age_bins):
             # Filter images in the bin range
             idx_age = np.array(round(Y_data["age"]) >= age_low)
             idx_age2 = np.array(age_high >= round(Y_data["age"]))
-            Y_filt = Y_data[idx_age*idx_age2]
+            Y_filt = Y_data[idx_age * idx_age2]
             # replace the age for the next bin
             age_low = age_high
             # Get the minimun value for each bin
@@ -42,8 +42,7 @@ def get_min_common_number_images_in_age_bins(Y_data, age_bins):
     return min_image
 
 
-def filter_age_bins_with_qc(Y_data, age_bins, n_images, sampling,
-                            random_state=None):
+def filter_age_bins_with_qc(Y_data, age_bins, n_images, sampling, random_state=None):
     bin = 0
     filter_index = pd.Index([])  # Initialize an empty index
 
@@ -58,12 +57,12 @@ def filter_age_bins_with_qc(Y_data, age_bins, n_images, sampling,
             idx_age2 = np.array(age_high >= round(Y_data["age"]))
             Y_filt = Y_data[idx_age * idx_age2]
 
-            if sampling == 'high_Q':
+            if sampling == "high_Q":
                 # Sort by IQR in ascending order to get the lowest IQR values
-                Y_filt = Y_filt.sort_values(by='IQR', ascending=True)
-            elif sampling == 'low_Q':
+                Y_filt = Y_filt.sort_values(by="IQR", ascending=True)
+            elif sampling == "low_Q":
                 # Sort by IQR in descending order to get the highest IQR values
-                Y_filt = Y_filt.sort_values(by='IQR', ascending=False)
+                Y_filt = Y_filt.sort_values(by="IQR", ascending=False)
             else:
                 # Random sampling
                 Y_filt = Y_filt.sample(frac=1, random_state=random_state)
@@ -85,42 +84,101 @@ def filter_age_bins_with_qc(Y_data, age_bins, n_images, sampling,
     return filter_index
 
 
-def keep_desired_age_range(Y, low_cut_age, high_cut_age):
-    # Remove under 18 patients
+def keep_desired_age_range(
+    Y: pd.DataFrame, low_cut_age: int, high_cut_age: int
+) -> pd.DataFrame:
+    """
+    Filters the dataset to keep only rows where the age is within the specified range.
+
+    Parameters
+    ----------
+    Y : pd.DataFrame
+        DataFrame containing the data with an "age" column.
+    low_cut_age : int
+        The lower bound of the age range (inclusive).
+    high_cut_age : int
+        The upper bound of the age range (inclusive).
+
+    Returns
+    -------
+    pd.DataFrame
+        Filtered DataFrame containing only rows within the specified age range.
+    """
+    # Remove under low_cut_age patients
     idx_age = np.array(round(Y["age"]) >= low_cut_age)
-    # Remove patients over the limit
+    # Remove patients over the high_cut_age limit
     idx_age2 = np.array(high_cut_age >= round(Y["age"]))
-    Y_sel = Y[idx_age*idx_age2]
+    Y_sel = Y[idx_age * idx_age2]
     return Y_sel
 
 
-def get_age_bins(Y, n_age_bins):
+def get_age_bins(Y: pd.DataFrame, n_age_bins: int) -> range:
+    """
+    Computes age bins for dividing the dataset into equal intervals.
+
+    Parameters
+    ----------
+    Y : pd.DataFrame
+        DataFrame containing the data with an "age" column.
+    n_age_bins : int
+        The number of age bins to create.
+
+    Returns
+    -------
+    range
+        A range object representing the age bins.
+    """
     # For getting the "age bins". We will have the same number
     # of images for each gender in each age bin
     age_min = round(Y["age"].min())
     age_max = round(Y["age"].max())
-    steps = round((age_max-age_min) / n_age_bins)
+    steps = round((age_max - age_min) / n_age_bins)
     age_bins = range(age_min, age_max, steps)
     return age_bins
 
 
-def balance_data_age_gender_Qsampling(X, Y, n_age_bins, Q_sampling,
-                                      low_cut_age: int = 18,
-                                      high_cut_age: int = 80):
+def balance_data_age_gender_Qsampling(
+    X: pd.DataFrame,
+    Y: pd.DataFrame,
+    n_age_bins: int,
+    Q_sampling: str,
+    low_cut_age: int = 18,
+    high_cut_age: int = 80,
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """
+    Balances the dataset by age and gender while applying quality sampling.
 
+    Parameters
+    ----------
+    X : pd.DataFrame
+        DataFrame containing the input features.
+    Y : pd.DataFrame
+        DataFrame containing the target variables, including "age" and "gender" columns.
+    n_age_bins : int
+        Number of age bins to divide the dataset into.
+    Q_sampling : str
+        Sampling strategy for quality control. Options are "high_Q", "low_Q", or "random".
+    low_cut_age : int, optional
+        The lower bound of the age range to keep (inclusive). Default is 18.
+    high_cut_age : int, optional
+        The upper bound of the age range to keep (inclusive). Default is 80.
+
+    Returns
+    -------
+    tuple[pd.DataFrame, pd.DataFrame]
+        A tuple containing the filtered input features (X) and target variables (Y).
+    """
     Y = keep_desired_age_range(Y, low_cut_age, high_cut_age)
 
     age_bins = get_age_bins(Y, n_age_bins)
 
-    # Determine what is the max number of images in the
-    # formed age bins for each gender
+    # Determine the minimum number of images in the formed age bins for each gender
     n_images = get_min_common_number_images_in_age_bins(Y, age_bins)
 
-    # get the images depending the QC
-    index = filter_age_bins_with_qc(Y, age_bins,
-                                    n_images, sampling=Q_sampling)
+    # Get the images based on the quality sampling strategy
+    index = filter_age_bins_with_qc(Y, age_bins, n_images, sampling=Q_sampling)
 
-    # filter the data
+    # Filter the data
     Y = Y.loc[index]
     X = X.loc[index]
     return X, Y
@@ -147,7 +205,7 @@ class ConfoundRegressor_TIV(TransformerMixin, BaseEstimator):
         # Initialize regression models for each feature and Y
         self.feature_models = []
         for i in range(X.shape[1]):
-            reg = LinearRegression().fit(TIV, X[:, i])
+            reg = LinearRegression(n_jobs=-1).fit(TIV, X[:, i])
             self.feature_models.append(reg)
 
         # Fit the regression model for Y

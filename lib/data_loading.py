@@ -1,8 +1,25 @@
-import pandas as pd
 import os
+import pandas as pd
+from typing import Tuple
 
 
-def load_data_and_qc(site):
+def load_data_and_qc(site: str) -> Tuple[pd.DataFrame, pd.DataFrame]:
+    """
+    Load and preprocess data for a given site.
+
+    This function loads the X and Y data for the specified site from the "data" folder,
+    removes columns with missing values from the X data, and returns the processed data.
+
+    Parameters
+    ----------
+    site : str
+        The site identifier used to locate the corresponding data files.
+
+    Returns
+    -------
+    Tuple[pd.DataFrame, pd.DataFrame]
+        A tuple containing the processed X data (features) and Y data (labels).
+    """
     # Generate the path to the data.
     # The data must be stored in "data" inside the repo folder
     data_folder_path = os.path.join(
@@ -15,10 +32,33 @@ def load_data_and_qc(site):
     return X_data, Y_data
 
 
-def load_ROI_data_and_qc(data_dir, qc_dir, site):
+def load_ROI_data_and_qc(
+    data_dir: str, qc_dir: str, site: str
+) -> Tuple[pd.DataFrame, pd.DataFrame]:
+    """
+    Load and preprocess ROI data and quality control (QC) data for a given site.
+
+    This function loads the ROI data and QC data for the specified site, applies site-specific
+    preprocessing steps, merges the QC data with the Y data, and ensures consistency between
+    the X and Y data. It also removes unnecessary columns and resets the indices.
+
+    Parameters
+    ----------
+    data_dir : str
+        The directory containing the Y data files.
+    qc_dir : str
+        The directory containing the QC data files.
+    site : str
+        The site identifier used to locate the corresponding data files.
+
+    Returns
+    -------
+    Tuple[pd.DataFrame, pd.DataFrame]
+        A tuple containing the processed X data (features) and Y data (labels).
+    """
     data = pd.read_csv(
         qc_dir + site + "_cat12.8.1_rois_Schaefer2018_400Parcels_17Networks_order.csv"
-    )  # noqa
+    )
 
     # For the naming exeptions
     if site == "eNKI":
