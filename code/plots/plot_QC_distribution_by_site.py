@@ -1,18 +1,20 @@
 # %%
-import os
 import sys
 import matplotlib.pyplot as plt
 import seaborn as sbn
-project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))             # noqa
-sys.path.append(project_root)
+from pathlib import Path
 
-from lib.data_processing import balance_data_age_gender_Qsampling # noqa
-from lib.data_loading import load_data_and_qc                           # noqa
+project_root = Path().resolve().parents[1]
+
+sys.path.append(str(project_root))
+
+from lib.data_processing import balance_data_age_gender_Qsampling  # noqa
+from lib.data_loading import load_data_and_qc  # noqa
 
 # %%
 # Select dataset
-site_list = ["SALD", "eNKI", "CamCAN"]
-site_list = ["AOMIC_ID1000", "1000Brains"]
+site_list = ["SALD", "eNKI", "CamCAN", "AOMIC_ID1000", "1000Brains"]
+site_list = ["SALD"]
 
 # Age range
 low_cut_age = 18
@@ -25,21 +27,24 @@ n_age_bins = 10
 # low_Q retains the images with HIGHER IQR
 # high_Q retains the images with LOWER IQR
 # random dosen't care about QC
-sampling_list = ["low_Q", "high_Q", "random_Q"]
+sampling_list = ["low_Q", "high_Q"]
 
 
-plt.figure(figsize=[15, 15])
-print("hola")
+
 for row, site in enumerate(site_list):
     for col, sampling in enumerate(sampling_list):
-
         print(site)
         print(sampling)
         # Load data and prepare it
         X, Y = load_data_and_qc(site=site)
+        plt.figure()
+        sbn.swarmplot(data = Y, y="IQR", x="age", hue="gender")
+        plt.figure()
 
         # This is the main function to obtain different cohorts from the data
         X, Y = balance_data_age_gender_Qsampling(X, Y, n_age_bins, sampling)
+        sbn.swarmplot(data = Y, y="IQR", x="age", hue="gender")
+
         # plt.subplot(3, 3, i)
 
         # sbn.swarmplot(Y.IQR)
@@ -49,6 +54,6 @@ for row, site in enumerate(site_list):
         # plt.ylim([1.5, 4.5])
         # plt.grid()
         print(Y.IQR.median())
-        i = i+1
+
 
 # %%

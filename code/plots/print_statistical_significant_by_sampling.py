@@ -194,18 +194,18 @@ import seaborn as sbn
 df = data
 df["Sampling_Q"].replace(
     {
-        "low_Q": "Low Quaility",
-        "high_Q": "High Quaility",
-        "random_Q": "Random Quaility",
+        "low_Q": "Low Quality",
+        "high_Q": "High Quality",
+        "random_Q": "Random Quality",
     },
     inplace=True,
 )
 # Define the desired order and hue_order
-order = ["Low Quaility", "Random Quaility", "High Quaility"]
+order = ["Low Quality", "Random Quality", "High Quality"]
 hue_order = [10, 3]
 
 # Initialize the plot
-plt.figure(figsize=(8, 6))
+plt.figure(figsize=(10, 8))
 ax = sbn.barplot(
     data=df,
     x="Sampling_Q",
