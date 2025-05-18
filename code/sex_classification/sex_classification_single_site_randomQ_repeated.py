@@ -21,7 +21,7 @@ save_dir = project_root / "output" / "ML" / "single_site"
 
 # Number of bins to split the age and keep the same number
 # of images in each age bin
-n_age_bins = 3
+n_age_bins = 10
 
 save_dir = save_dir / ("N_bins_" + str(n_age_bins))
 ensure_dir(save_dir)

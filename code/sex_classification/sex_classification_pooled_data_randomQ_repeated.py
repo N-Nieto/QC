@@ -53,9 +53,8 @@ kf_out = RepeatedStratifiedKFold(
     n_splits=N_SPLITS, n_repeats=N_REPEATS, random_state=RANDOM_STATE
 )
 
-# low_Q retains the images with HIGHER IQR
-# high_Q retains the images with LOWER IQR
-sampling_list = ("low_Q", "high_Q")
+# random Q
+sampling_list = ["random_q"]
 # %%
 results = []
 start_time = timeit.default_timer()
@@ -70,7 +69,7 @@ for repeated in range(RANDOM_REPETITIONS):
         print(sampling)
 
         for row, site in enumerate(site_list):
-            print(site)
+            # print(site)
             # Load data and prepare it
             X, Y = load_data_and_qc(site=site)
 
@@ -111,7 +110,7 @@ for repeated in range(RANDOM_REPETITIONS):
         # Main loop
         print("Main loop")
         for i_fold, (train_index, test_index) in enumerate(kf_out.split(X=X, y=Y)):  # noqa
-            print("FOLD: " + str(i_fold))
+            # print("FOLD: " + str(i_fold))
 
             # Patients used for train and internal XGB validation
             X_train = X[train_index, :].copy()

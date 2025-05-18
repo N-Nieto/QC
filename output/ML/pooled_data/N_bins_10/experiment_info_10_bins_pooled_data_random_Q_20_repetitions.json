@@ -1,0 +1,265 @@
+{
+    "experiment_description": "\nExperiment description:\nThis script is used to train a logistic regression model to classify sex based on\nbrain imaging data.\nAll sites are pooled together and then randomly sampled\nThe script uses a confound regressor to regress out the effect of Total Intracranial Volume (TIV)\nfrom the data before training the model.\n",
+    "experiment_time": 1927.9471436000022,
+    "site_list": [
+        "SALD",
+        "eNKI",
+        "CamCAN",
+        "AOMIC_ID1000",
+        "1000Brains"
+    ],
+    "sampling_list": [
+        "random_q"
+    ],
+    "low_cut_age": 18,
+    "high_cut_age": 80,
+    "n_age_bins": 10,
+    "n_splits": 5,
+    "n_repeats": 5,
+    "random_repetitions": 20,
+    "random_state": 23,
+    "sites_info": {
+        "0": {
+            "Pooled_Data": {
+                "random_q": {
+                    "num_samples": 1528,
+                    "num_features": 3747,
+                    "Q_mean": 2.2042,
+                    "Q_std_dev": 0.291,
+                    "Q_min_value": 1.8527,
+                    "Q_max_value": 4.232
+                }
+            }
+        },
+        "1": {
+            "Pooled_Data": {
+                "random_q": {
+                    "num_samples": 1528,
+                    "num_features": 3747,
+                    "Q_mean": 2.2038,
+                    "Q_std_dev": 0.291,
+                    "Q_min_value": 1.8531,
+                    "Q_max_value": 3.9316
+                }
+            }
+        },
+        "2": {
+            "Pooled_Data": {
+                "random_q": {
+                    "num_samples": 1528,
+                    "num_features": 3747,
+                    "Q_mean": 2.2125,
+                    "Q_std_dev": 0.3084,
+                    "Q_min_value": 1.8527,
+                    "Q_max_value": 4.0976
+                }
+            }
+        },
+        "3": {
+            "Pooled_Data": {
+                "random_q": {
+                    "num_samples": 1528,
+                    "num_features": 3747,
+                    "Q_mean": 2.2071,
+                    "Q_std_dev": 0.2985,
+                    "Q_min_value": 1.8531,
+                    "Q_max_value": 4.232
+                }
+            }
+        },
+        "4": {
+            "Pooled_Data": {
+                "random_q": {
+                    "num_samples": 1528,
+                    "num_features": 3747,
+                    "Q_mean": 2.2073,
+                    "Q_std_dev": 0.3109,
+                    "Q_min_value": 1.8527,
+                    "Q_max_value": 4.232
+                }
+            }
+        },
+        "5": {
+            "Pooled_Data": {
+                "random_q": {
+                    "num_samples": 1528,
+                    "num_features": 3747,
+                    "Q_mean": 2.199,
+                    "Q_std_dev": 0.2853,
+                    "Q_min_value": 1.8527,
+                    "Q_max_value": 3.8186
+                }
+            }
+        },
+        "6": {
+            "Pooled_Data": {
+                "random_q": {
+                    "num_samples": 1528,
+                    "num_features": 3747,
+                    "Q_mean": 2.2102,
+                    "Q_std_dev": 0.3009,
+                    "Q_min_value": 1.8527,
+                    "Q_max_value": 3.9316
+                }
+            }
+        },
+        "7": {
+            "Pooled_Data": {
+                "random_q": {
+                    "num_samples": 1528,
+                    "num_features": 3747,
+                    "Q_mean": 2.2149,
+                    "Q_std_dev": 0.3079,
+                    "Q_min_value": 1.8531,
+                    "Q_max_value": 4.1078
+                }
+            }
+        },
+        "8": {
+            "Pooled_Data": {
+                "random_q": {
+                    "num_samples": 1528,
+                    "num_features": 3747,
+                    "Q_mean": 2.2058,
+                    "Q_std_dev": 0.294,
+                    "Q_min_value": 1.8531,
+                    "Q_max_value": 4.0401
+                }
+            }
+        },
+        "9": {
+            "Pooled_Data": {
+                "random_q": {
+                    "num_samples": 1528,
+                    "num_features": 3747,
+                    "Q_mean": 2.2073,
+                    "Q_std_dev": 0.3007,
+                    "Q_min_value": 1.8531,
+                    "Q_max_value": 4.0976
+                }
+            }
+        },
+        "10": {
+            "Pooled_Data": {
+                "random_q": {
+                    "num_samples": 1528,
+                    "num_features": 3747,
+                    "Q_mean": 2.1997,
+                    "Q_std_dev": 0.2882,
+                    "Q_min_value": 1.8527,
+                    "Q_max_value": 3.8186
+                }
+            }
+        },
+        "11": {
+            "Pooled_Data": {
+                "random_q": {
+                    "num_samples": 1528,
+                    "num_features": 3747,
+                    "Q_mean": 2.2094,
+                    "Q_std_dev": 0.3051,
+                    "Q_min_value": 1.8531,
+                    "Q_max_value": 4.1078
+                }
+            }
+        },
+        "12": {
+            "Pooled_Data": {
+                "random_q": {
+                    "num_samples": 1528,
+                    "num_features": 3747,
+                    "Q_mean": 2.209,
+                    "Q_std_dev": 0.3073,
+                    "Q_min_value": 1.8527,
+                    "Q_max_value": 4.0218
+                }
+            }
+        },
+        "13": {
+            "Pooled_Data": {
+                "random_q": {
+                    "num_samples": 1528,
+                    "num_features": 3747,
+                    "Q_mean": 2.207,
+                    "Q_std_dev": 0.2983,
+                    "Q_min_value": 1.8527,
+                    "Q_max_value": 3.9701
+                }
+            }
+        },
+        "14": {
+            "Pooled_Data": {
+                "random_q": {
+                    "num_samples": 1528,
+                    "num_features": 3747,
+                    "Q_mean": 2.2074,
+                    "Q_std_dev": 0.2991,
+                    "Q_min_value": 1.8527,
+                    "Q_max_value": 3.9315
+                }
+            }
+        },
+        "15": {
+            "Pooled_Data": {
+                "random_q": {
+                    "num_samples": 1528,
+                    "num_features": 3747,
+                    "Q_mean": 2.2004,
+                    "Q_std_dev": 0.3017,
+                    "Q_min_value": 1.8531,
+                    "Q_max_value": 4.1423
+                }
+            }
+        },
+        "16": {
+            "Pooled_Data": {
+                "random_q": {
+                    "num_samples": 1528,
+                    "num_features": 3747,
+                    "Q_mean": 2.1973,
+                    "Q_std_dev": 0.2913,
+                    "Q_min_value": 1.8527,
+                    "Q_max_value": 4.232
+                }
+            }
+        },
+        "17": {
+            "Pooled_Data": {
+                "random_q": {
+                    "num_samples": 1528,
+                    "num_features": 3747,
+                    "Q_mean": 2.2076,
+                    "Q_std_dev": 0.3004,
+                    "Q_min_value": 1.8527,
+                    "Q_max_value": 4.0976
+                }
+            }
+        },
+        "18": {
+            "Pooled_Data": {
+                "random_q": {
+                    "num_samples": 1528,
+                    "num_features": 3747,
+                    "Q_mean": 2.211,
+                    "Q_std_dev": 0.3005,
+                    "Q_min_value": 1.8531,
+                    "Q_max_value": 3.9031
+                }
+            }
+        },
+        "19": {
+            "Pooled_Data": {
+                "random_q": {
+                    "num_samples": 1528,
+                    "num_features": 3747,
+                    "Q_mean": 2.2028,
+                    "Q_std_dev": 0.2945,
+                    "Q_min_value": 1.8527,
+                    "Q_max_value": 4.1423
+                }
+            }
+        }
+    },
+    "classifier": "LogisticRegression",
+    "confound_regressor": "TIV"
+}
