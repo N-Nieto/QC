@@ -1,8 +1,11 @@
 import sys
 from pathlib import Path
+from typing import Union
 
 
-def ensure_dir(target_path: str, emergency_base: str = "emergency_dir") -> None:
+def ensure_dir(
+    target_path: Union[str, Path], emergency_base: str = "emergency_dir"
+) -> None:
     """
     Ensure a directory exists at `target_path`. If creation fails,
     fall back to an emergency directory in the current working directory.

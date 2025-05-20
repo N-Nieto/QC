@@ -15,7 +15,7 @@ def classification_results_by_site(
     result: List[List[Union[int, str, float]]],
     sampling: str,
     sites: List[str],
-    repeated: int = None,
+    repeated: Union[int, None] = None,
 ) -> List[List[Union[int, str, float]]]:
     """
     Calculate evaluation metrics by fold and append results to the given list.
@@ -82,7 +82,7 @@ def compute_regression_results(
     result: List[List[Union[int, str, float]]],
     sampling: str,
     sites: List[str],
-    repeated: int = None,
+    repeated: Union[int, None] = None,
 ) -> List[List[Union[int, str, float]]]:
     """
     Calculate evaluation metrics by fold and append results to the given list.

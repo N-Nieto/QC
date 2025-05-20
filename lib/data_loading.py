@@ -1,9 +1,11 @@
-import os
 import pandas as pd
 from typing import Tuple
+from pathlib import Path
 
 
-def load_data_and_qc(site: str) -> Tuple[pd.DataFrame, pd.DataFrame]:
+def load_data_and_qc(
+    site: str, base_path: Path = Path().resolve().parents[1]
+) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """
     Load and preprocess data for a given site.
 
@@ -22,12 +24,10 @@ def load_data_and_qc(site: str) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """
     # Generate the path to the data.
     # The data must be stored in "data" inside the repo folder
-    data_folder_path = os.path.join(
-        os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data/"
-    )
+    data_folder_path = base_path / "data/"
 
-    X_data = pd.read_csv(data_folder_path + "X_" + site + ".csv", index_col=0)
-    Y_data = pd.read_csv(data_folder_path + "Y_" + site + ".csv", index_col=0)
+    X_data = pd.read_csv(data_folder_path / ("X_" + site + ".csv"), index_col=0)
+    Y_data = pd.read_csv(data_folder_path / ("Y_" + site + ".csv"), index_col=0)
     X_data = X_data.dropna(axis=1)
     return X_data, Y_data
 
