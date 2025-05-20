@@ -4,16 +4,24 @@ import pandas as pd
 import sys
 from scipy.stats import ttest_ind
 from pathlib import Path
+# To avoid the warning when converting the "F" and "M" to 0 and 1
+pd.set_option("future.no_silent_downcasting", True)
 
 project_root = Path().resolve().parents[1]
 sys.path.append(str(project_root))
-from lib.data_processing import balance_data_age_gender_Qsampling   # noqa
-from lib.data_loading import load_data_and_qc                       # noqa
-from lib.data_processing import ConfoundRegressor_TIV               # noqa
+from lib.data_processing import balance_data_age_gender_Qsampling  # noqa
+from lib.data_loading import load_data_and_qc  # noqa
+from lib.data_processing import ConfoundRegressor_TIV  # noqa
+from lib.utils import ensure_dir  # noqa
 
 p_values = []  # To store p-values for each feature
 
-save_dir = project_root / "output" / "statistics/"
+save_dir = project_root / "output" / "statistics" / "pooled_data/"
+
+n_age_bins = 10  # experiments were run using 10 or 3
+
+save_dir = save_dir / ("N_bins_" + str(n_age_bins))
+ensure_dir(save_dir)
 # %%
 # Select dataset
 site_list = ("SALD", "eNKI", "CamCAN", "AOMIC_ID1000", "1000Brains")
@@ -24,7 +32,6 @@ low_cut_age = 18
 high_cut_age = 80
 # Number of bins to split the age and keep the same number
 # of images in each age bin
-n_age_bins = 10
 
 # low_Q retains the images with HIGHER IQR
 # high_Q retains the images with LOWER IQR
@@ -39,7 +46,6 @@ for col, sampling in enumerate(sampling_list):
     X_pooled = pd.DataFrame()
     Y_pooled = pd.DataFrame()
     for row, site in enumerate(site_list):
-
         print(site)
         # Load data and prepare it
         X, Y = load_data_and_qc(site=site)
@@ -49,11 +55,12 @@ for col, sampling in enumerate(sampling_list):
 
         X_pooled = pd.concat([X_pooled, X])
         Y_pooled = pd.concat([Y_pooled, Y])
+    
+    Y_pooled.replace(
+        {"gender": {"F": 0, "M": 1}, "TIV": {np.nan: Y_pooled["TIV"].mean()}},
+        inplace=True,
+    )
 
-    Y_pooled["gender"] = Y_pooled["gender"].replace({"F": 0, "M": 1}).astype(int)       # noqa
-    # If there are any missing values replace is with the mean of the
-    # TIV (There are not many missing)
-    Y_pooled["TIV"].replace({np.nan: Y_pooled["TIV"].mean()}, inplace=True)
     TIV = Y_pooled["TIV"].astype(float).to_numpy()
     Y = Y_pooled["gender"].to_numpy()
     X = X_pooled
@@ -84,15 +91,26 @@ for col, sampling in enumerate(sampling_list):
     # ----------------------------
     # 4. Convert p-values to a Pandas DataFrame for easy handling and saving
     # ----------------------------
-    p_values_df = pd.DataFrame({
-        'Feature': X.columns,
-        'P-value': p_values,
-        "t-stat": t_stats,
-        'sampling': sampling
-    })
+    p_values_df = pd.DataFrame(
+        {
+            "Feature": X.columns,
+            "P-value": p_values,
+            "t-stat": t_stats,
+            "sampling": sampling,
+        }
+    )
 
     # Save the results for each sampling
-    p_values_df.to_csv(project_root+save_dir+"statistic_test_"+str(n_age_bins)+"_bins_sampling_"+sampling+"_5_sites.csv")    # noqa
+    p_values_df.to_csv(
+        save_dir
+        / (
+            "statistic_test_"
+            + str(n_age_bins)
+            + "_bins_sampling_"
+            + sampling
+            + ".csv"
+        )
+    )
 
 print("Experiment Done!")
 

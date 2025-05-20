@@ -3,19 +3,28 @@ import numpy as np
 import pandas as pd
 import sys
 from scipy.stats import ttest_ind
-import os
-project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))             # noqa
-sys.path.append(project_root)
-from lib.data_processing import balance_data_age_gender_Qsampling       # noqa
-from lib.data_loading import load_data_and_qc                           # noqa
-from lib.data_processing import ConfoundRegressor_TIV                   # noqa
+from pathlib import Path
+
+# To avoid the warning when converting the "F" and "M" to 0 and 1
+pd.set_option("future.no_silent_downcasting", True)
+
+project_root = Path().resolve().parents[1]
+sys.path.append(str(project_root))
+from lib.data_processing import balance_data_age_gender_Qsampling  # noqa
+from lib.data_loading import load_data_and_qc  # noqa
+from lib.data_processing import ConfoundRegressor_TIV  # noqa
+from lib.utils import ensure_dir  # noqa
 
 p_values = []  # To store p-values for each feature
 
-save_dir = "/output/statistics/single_site/"
+save_dir = project_root / "output" / "statistics" / "single_site/"
+
+n_age_bins = 3  # experiments were run using 10 or 3
+
+save_dir = save_dir / ("N_bins_" + str(n_age_bins))
+ensure_dir(save_dir)
 # %%
 # Select dataset
-site_list = ["SALD", "eNKI", "CamCAN"]
 site_list = ["SALD", "eNKI", "CamCAN", "AOMIC_ID1000", "1000Brains"]
 
 # Age range
@@ -23,15 +32,14 @@ low_cut_age = 18
 high_cut_age = 80
 # Number of bins to split the age and keep the same number
 # of images in each age bin
-n_age_bins = 10
 random_q_repeated = 20
 
 # randomly select participants
 sampling = "random_Q"
 
 confound_regressor = ConfoundRegressor_TIV()
+p_values_df = pd.DataFrame(columns=["Feature", "P-value", "t-stat", "sampling"])
 for row, site in enumerate(site_list):
-
     print(site)
     # Load data and prepare it
     X_org, Y_org = load_data_and_qc(site=site)
@@ -40,21 +48,18 @@ for row, site in enumerate(site_list):
         print(repeated)
 
         # This is the main function to obtain different cohorts from the data
-        X, Y = balance_data_age_gender_Qsampling(X_org, Y_org, n_age_bins,
-                                                 sampling)
+        X, Y = balance_data_age_gender_Qsampling(X_org, Y_org, n_age_bins, sampling)
 
         # Replace the gender to number
-        Y["gender"].replace({"F": 0, "M": 1}, inplace=True)
-        # If there are any missing values replace is with the mean of the
-        # TIV (There are not many missing)
-        Y["TIV"].replace({np.nan: Y["TIV"].mean()}, inplace=True)
+        Y.replace(
+            {"gender": {"F": 0, "M": 1}, "TIV": {np.nan: Y["TIV"].mean()}}, inplace=True
+        )
         TIV = Y["TIV"].astype(float).to_numpy()
         Y = Y["gender"].to_numpy()
 
         # Remove TIV as confound
         confound_regressor.fit(X.to_numpy(), Y, TIV)
-        X_residual, Y_residual = confound_regressor.transform(X.to_numpy(),
-                                                              Y, TIV)
+        X_residual, Y_residual = confound_regressor.transform(X.to_numpy(), Y, TIV)
 
         X = pd.DataFrame(X_residual)
         p_values = []  # To store p-values for each feature
@@ -76,25 +81,29 @@ for row, site in enumerate(site_list):
         # ----------------------------
         # 4. Convert p-values to a Pandas DataFrame for easy handling
         # ----------------------------
-        if repeated == 0:
-            p_values_df = pd.DataFrame({
-                'Feature': X.columns,
-                'P-value': p_values,
-                "t-stat": t_stats,
-                'sampling': sampling
-            })
-        else:
-            p_values_df_loop = pd.DataFrame({
-                'Feature': X.columns,
-                'P-value': p_values,
-                "t-stat": t_stats,
-                'sampling': sampling
-            })
-            p_values_df = pd.concat([p_values_df, p_values_df_loop])
 
+        p_values_df_loop = pd.DataFrame(
+            {
+                "Feature": X.columns,
+                "P-value": p_values,
+                "t-stat": t_stats,
+                "sampling": sampling,
+            }
+        )
+        p_values_df = pd.concat([p_values_df, p_values_df_loop])
 
-    p_values_df.to_csv(project_root+save_dir+"statistic_test_"+str(n_age_bins)+"bins_"+str(random_q_repeated)+"repeated_random_sampling_"+site+".csv")     # noqa
-    # Add a red line to show the significance threshold (e.g., p=0.05)
+    p_values_df.to_csv(
+        save_dir
+        / (
+            "statistic_test_"
+            + str(n_age_bins)
+            + "bins_"
+            + str(random_q_repeated)
+            + "repeated_random_sampling_"
+            + site
+            + ".csv"
+        )
+    )
 
 print("Experiment Done!")
 
