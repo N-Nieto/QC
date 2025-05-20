@@ -15,15 +15,8 @@ from lib.utils import ensure_dir  # noqa
 from lib.data_processing import keep_desired_age_range  # noqa
 
 # Save Direction
-save_dir = project_root / "output" / "QC_prediction_from_features" / "single_site"
+save_dir = project_root / "output" / "QC_prediction_from_features/"
 
-# Number of bins to split the age and keep the same number
-# of images in each age bin
-n_age_bins = 10  # experiments were run using 10 or 3
-
-save_dir = save_dir / ("N_bins_" + str(n_age_bins))
-ensure_dir(save_dir)
-# %%
 ensure_dir(save_dir)
 # %%
 # Select dataset
@@ -48,7 +41,7 @@ kf_out = RepeatedKFold(
 )
 
 results = []
-sampling = ["random_Q"]
+sampling = "all_data_used"
 
 y_true_loop = []
 y_pred_loop = []
@@ -117,7 +110,7 @@ results_loop = pd.DataFrame(
     }
 )
 # %%
-results.to_csv(str(save_dir / "results_QC_agregated_single_site.csv"))
+results.to_csv(str(save_dir / "results_QC_single_site.csv"))
 results_loop.to_csv(str(save_dir / "results_QC_prediction_single_site.csv"))
 
 # %%
