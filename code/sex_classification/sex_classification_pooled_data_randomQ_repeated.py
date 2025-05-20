@@ -142,7 +142,7 @@ for repeated in range(RANDOM_REPETITIONS):
                 results,
                 sampling,
                 site_test,
-            )  # noqa
+            )
 
             pred_train = clf.predict_proba(X_residual)[:, 1]
             results = classification_results_by_site(
@@ -153,7 +153,7 @@ for repeated in range(RANDOM_REPETITIONS):
                 results,
                 sampling,
                 site_train,
-            )  # noqa
+            )
 
 
 experiment_time = timeit.default_timer() - start_time
