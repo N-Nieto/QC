@@ -6,9 +6,6 @@ __pycache__/
 # C extensions
 *.so
 
-merge_data.py
-shuffle_data.py
-
 # Distribution / packaging
 .Python
 build/
