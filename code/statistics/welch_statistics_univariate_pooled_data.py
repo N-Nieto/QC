@@ -82,7 +82,7 @@ for col, sampling in enumerate(sampling_list):
         group2 = X[Y == 1][feature]  # Group corresponding to target == 1
 
         # Perform independent t-test
-        t_stat, p_val = ttest_ind(group1, group2, equal_var=True)
+        t_stat, p_val = ttest_ind(group1, group2, equal_var=False)
 
         # Append the p-value for this feature
         p_values.append(p_val)
@@ -104,7 +104,7 @@ for col, sampling in enumerate(sampling_list):
     p_values_df.to_csv(
         save_dir
         / (
-            "statistic_test_"
+            "welch_test_"
             + str(n_age_bins)
             + "_bins_sampling_"
             + sampling

@@ -3,19 +3,25 @@ import numpy as np
 import pandas as pd
 import sys
 from scipy.stats import ttest_ind
-import os
-project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))             # noqa
-sys.path.append(project_root)
-from lib.data_processing import balance_data_age_gender_Qsampling       # noqa
-from lib.data_loading import load_data_and_qc                           # noqa
-from lib.data_processing import ConfoundRegressor_TIV                   # noqa
+from pathlib import Path
+
+project_root = Path().resolve().parents[1]
+sys.path.append(str(project_root))
+from lib.data_processing import balance_data_age_gender_Qsampling  # noqa
+from lib.data_loading import load_data_and_qc  # noqa
+from lib.data_processing import ConfoundRegressor_TIV  # noqa
+from lib.utils import ensure_dir  # noqa
 
 p_values = []  # To store p-values for each feature
 
-save_dir = "/output/statistics/"
+save_dir = project_root / "output" / "statistics" / "pooled_data/"
+
+n_age_bins = 10  # experiments were run using 10 or 3
+
+save_dir = save_dir / ("N_bins_" + str(n_age_bins))
+ensure_dir(save_dir)
 # %%
 # Select dataset
-site_list = ["SALD", "eNKI", "CamCAN"]
 site_list = ["SALD", "eNKI", "CamCAN", "AOMIC_ID1000", "1000Brains"]
 
 # Age range
@@ -30,13 +36,12 @@ random_q_repeated = 20
 sampling = "random_Q"
 
 confound_regressor = ConfoundRegressor_TIV()
-
+p_values_df = pd.DataFrame()
 for repeated in range(random_q_repeated):
     print(repeated)
     X_pooled = pd.DataFrame()
     Y_pooled = pd.DataFrame()
     for row, site in enumerate(site_list):
-
         print(site)
         # Load data and prepare it
         X, Y = load_data_and_qc(site=site)
@@ -80,32 +85,44 @@ for repeated in range(random_q_repeated):
     # ----------------------------
     # 4. Convert p-values to a Pandas DataFrame for easy handling and saving
     # ----------------------------
-    if repeated == 0:
-        p_values_df = pd.DataFrame({
-            'Feature': X.columns,
-            'P-value': p_values,
+    p_values_df_loop = pd.DataFrame(
+        {
+            "Feature": X.columns,
+            "P-value": p_values,
             "t-stat": t_stats,
-
-            'sampling': sampling
-        })
-    else:
-        p_values_df_loop = pd.DataFrame({
-            'Feature': X.columns,
-            'P-value': p_values,
-            "t-stat": t_stats,
-            'sampling': sampling
-        })
-        p_values_df = pd.concat([p_values_df, p_values_df_loop])
+            "sampling": sampling,
+        }
+    )
+    p_values_df = pd.concat([p_values_df, p_values_df_loop])
 
 # %%
-p_values_df.to_csv(project_root+save_dir+"statistic_test_"+str(n_age_bins)+"bins_"+str(random_q_repeated)+"repeated_random_sampling_5_sites.csv")     # noqa
+p_values_df.to_csv(
+    save_dir
+    / (
+        "statistic_test_"
+        + str(n_age_bins)
+        + "bins_"
+        + str(random_q_repeated)
+        + "repeated_random_sampling.csv"
+    )
+)  # noqa
 # Add a red line to show the significance threshold (e.g., p=0.05)
 
 print("Experiment Done!")
 # %%
-p_value_threshold = 0.05/3747
+p_value_threshold = 0.05 / 3747
 random_q_repetitions = 20
-significant_features = p_values_df[p_values_df["P-value"] < p_value_threshold]                        # noqa
+significant_features = p_values_df[p_values_df["P-value"] < p_value_threshold]  # noqa
 
-print("For "+sampling+": median pvalue: " + str(significant_features["P-value"].median()))                      # noqa
-print("For "+sampling+": Number of statistically significant features: " + str(significant_features.__len__()/random_q_repetitions)) # noqa
+print(
+    "For "
+    + sampling
+    + ": median pvalue: "
+    + str(significant_features["P-value"].median())
+)  # noqa
+print(
+    "For "
+    + sampling
+    + ": Number of statistically significant features: "
+    + str(significant_features.__len__() / random_q_repetitions)
+)  # noqa

@@ -38,7 +38,7 @@ random_q_repeated = 20
 sampling = "random_Q"
 
 confound_regressor = ConfoundRegressor_TIV()
-p_values_df = pd.DataFrame(columns=["Feature", "P-value", "t-stat", "sampling"])
+p_values_df = pd.DataFrame()
 for row, site in enumerate(site_list):
     print(site)
     # Load data and prepare it
