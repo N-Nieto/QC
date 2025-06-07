@@ -1,0 +1,38 @@
+{
+    "experiment_time": 104.41806554100185,
+    "site_list": [
+        "DLBS"
+    ],
+    "sampling_list": [
+        "low_Q",
+        "high_Q"
+    ],
+    "low_cut_age": 18,
+    "high_cut_age": 80,
+    "n_age_bins": 3,
+    "n_splits": 5,
+    "n_repeats": 5,
+    "random_state": 23,
+    "sites_info": {
+        "DLBS": {
+            "low_Q": {
+                "num_samples": 128,
+                "num_features": 3747,
+                "Q_mean": 2.7813,
+                "Q_std_dev": 0.3503,
+                "Q_min_value": 2.2318,
+                "Q_max_value": 4.2646
+            },
+            "high_Q": {
+                "num_samples": 128,
+                "num_features": 3747,
+                "Q_mean": 2.5581,
+                "Q_std_dev": 0.3078,
+                "Q_min_value": 2.1594,
+                "Q_max_value": 4.2646
+            }
+        }
+    },
+    "classifier": "LogisticRegression",
+    "confound_regressor": "TIV"
+}

@@ -17,7 +17,7 @@ from lib.ml import classification_results_by_site  # noqa
 from lib.utils import ensure_dir  # noqa
 
 # Save Direction
-save_dir = project_root / "output" / "ML" / "single_site"
+save_dir = project_root / "output" / "ML" / "single_site" / "flexible_age_range"
 
 # Number of bins to split the age and keep the same number
 # of images in each age bin
@@ -27,19 +27,21 @@ save_dir = save_dir / ("N_bins_" + str(n_age_bins))
 ensure_dir(save_dir)
 # %%
 
-experiment_description = """
-Experiment description:
-This script is used to train a logistic regression model to classify sex based on
-brain imaging data. The data is split into training and testing sets using repeated stratified k-fold cross-validation. The model is trained on the training set and evaluated on the testing set, with results saved to a CSV file. The script also generates a JSON file containing experiment information.
-Each site is sampled with two different sampling methods: low_Q and high_Q.
-The low_Q method retains images with higher IQR values, while the high_Q method retains images with lower IQR values. The script uses a confound regressor to regress out the effect of Total Intracranial Volume (TIV) from the data before training the model.
-"""
+age_cutoffs = {"SALD": {"low": 18, "high": 80},
+               "eNKI": {"low": 18, "high": 70},
+               "CamCAN": {"low": 18, "high": 80},
+               "AOMIC_ID1000": {"low": 18, "high": 26},
+               "1000Brains": {"low": 45, "high": 80},
+               "GSP": {"low": 18, "high": 26},
+               "DLBS": {"low": 18, "high": 80},}   
+
+
 # Select dataset
-site_list = ("SALD", "eNKI", "CamCAN", "AOMIC_ID1000", "1000Brains")
+site_list = ("SALD", "eNKI", "CamCAN", "AOMIC_ID1000", "1000Brains", "GSP", "DLBS")
 
 # Age range
-LOW_CUT_AGE = 18
-HICH_CUT_AGE = 80
+# LOW_CUT_AGE = 18
+# HICH_CUT_AGE = 80
 
 N_SPLITS = 5
 N_REPEATS = 5
@@ -55,17 +57,23 @@ kf_out = RepeatedStratifiedKFold(
 # high_Q retains the images with LOWER IQR
 sampling_list = ("low_Q", "high_Q")
 # %%
-results = []
 start_time = timeit.default_timer()
 site_info = {}
 for row, site in enumerate(site_list):
     site_info[site] = {}
     for col, sampling in enumerate(sampling_list):
+        results = []
         print(site)
         print(sampling)
+        save_dir_results = save_dir / site / sampling
+        ensure_dir(save_dir_results)
         # Load data and prepare it
         X, Y = load_data_and_qc(site=site)
 
+        LOW_CUT_AGE = age_cutoffs[site]["low"]
+        HICH_CUT_AGE = age_cutoffs[site]["high"]
+
+        print(f"Low cut age: {LOW_CUT_AGE}, High cut age: {HICH_CUT_AGE}")
         # This is the main function to obtain different cohorts from the data
         X, Y = balance_data_age_gender_Qsampling(
             X,
@@ -76,7 +84,7 @@ for row, site in enumerate(site_list):
             high_cut_age=HICH_CUT_AGE,
         )
         X = X.to_numpy()
-
+        print(f"Number of samples: {X.shape[0]}, Number of features: {X.shape[1]}")
         site_info[site][sampling] = {
             "num_samples": X.shape[0],
             "num_features": X.shape[1],
@@ -94,7 +102,7 @@ for row, site in enumerate(site_list):
 
         # Main loop
         for i_fold, (train_index, test_index) in enumerate(kf_out.split(X=X, y=Y)):  # noqa
-            print("FOLD: " + str(i_fold))
+            print(f"FOLD: {i_fold}")
 
             # Patients used for train and internal XGB validation
             X_train = X[train_index, :].copy()
@@ -132,35 +140,37 @@ for row, site in enumerate(site_list):
                 [site],
             )
 
+        # create a DataFrame for easier handeling
+        results = pd.DataFrame(
+            results,
+            columns=[
+                "Fold",
+                "Model",
+                "Balanced ACC",
+                "AUC",
+                "F1",
+                "Recall",
+                "QC_Sampling",
+                "Site",
+            ],
+        )
+
+        results.to_csv(
+            save_dir_results
+            / (f"results_{n_age_bins}_bins_site_{site}_sampling_{sampling}.csv")
+        )
+
 experiment_time = timeit.default_timer() - start_time
 print("Time elapsed: " + str(experiment_time))
-# create a DataFrame for easier handeling
-results = pd.DataFrame(
-    results,
-    columns=[
-        "Fold",
-        "Model",
-        "Balanced ACC",
-        "AUC",
-        "F1",
-        "Recall",
-        "QC_Sampling",
-        "Site",
-    ],
-)
 # %%
-results.to_csv(
-    save_dir
-    / ("results_" + str(n_age_bins) + "_bins_single_site_high_low_sampling_Q.csv")
-)
+
 # %%
 experiment_info = {
-    "experiment_description": experiment_description,
     "experiment_time": experiment_time,
     "site_list": site_list,
     "sampling_list": sampling_list,
-    "low_cut_age": LOW_CUT_AGE,
-    "high_cut_age": HICH_CUT_AGE,
+    # "low_cut_age": LOW_CUT_AGE,
+    # "high_cut_age": HICH_CUT_AGE,
     "n_age_bins": n_age_bins,
     "n_splits": N_SPLITS,
     "n_repeats": N_REPEATS,
@@ -171,11 +181,7 @@ experiment_info = {
 }
 with open(
     save_dir
-    / (
-        "experiment_info_"
-        + str(n_age_bins)
-        + "_bins_single_site_high_low_sampling_Q.json"
-    ),
+    / (f"Overall_experiment_info_{n_age_bins}_bins_single_site_high_low_sampling_Q.json"),
     "w",
 ) as f:
     json.dump(experiment_info, f, indent=4)
