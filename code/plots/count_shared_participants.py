@@ -12,7 +12,7 @@ from lib.data_loading import load_data_and_qc                           # noqa
 from lib.data_processing import keep_desired_age_range, get_age_bins          # noqa
 
 
-site_list = ["SALD", "eNKI", "CamCAN", "AOMIC_ID1000", "1000Brains"]
+site_list = ["SALD"]
 
 # Age range
 low_cut_age = 18

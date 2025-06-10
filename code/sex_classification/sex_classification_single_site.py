@@ -26,22 +26,12 @@ n_age_bins = 3  # experiments were run using 10 or 3
 save_dir = save_dir / ("N_bins_" + str(n_age_bins))
 ensure_dir(save_dir)
 # %%
-
-age_cutoffs = {"SALD": {"low": 18, "high": 80},
-               "eNKI": {"low": 18, "high": 70},
-               "CamCAN": {"low": 18, "high": 80},
-               "AOMIC_ID1000": {"low": 18, "high": 26},
-               "1000Brains": {"low": 45, "high": 80},
-               "GSP": {"low": 18, "high": 26},
-               "DLBS": {"low": 18, "high": 80},}   
-
-
 # Select dataset
 site_list = ("SALD", "eNKI", "CamCAN", "AOMIC_ID1000", "1000Brains", "GSP", "DLBS")
 
 # Age range
-# LOW_CUT_AGE = 18
-# HICH_CUT_AGE = 80
+LOW_CUT_AGE = 18
+HICH_CUT_AGE = 80
 
 N_SPLITS = 5
 N_REPEATS = 5
@@ -69,9 +59,6 @@ for row, site in enumerate(site_list):
         ensure_dir(save_dir_results)
         # Load data and prepare it
         X, Y = load_data_and_qc(site=site)
-
-        LOW_CUT_AGE = age_cutoffs[site]["low"]
-        HICH_CUT_AGE = age_cutoffs[site]["high"]
 
         print(f"Low cut age: {LOW_CUT_AGE}, High cut age: {HICH_CUT_AGE}")
         # This is the main function to obtain different cohorts from the data
@@ -169,8 +156,8 @@ experiment_info = {
     "experiment_time": experiment_time,
     "site_list": site_list,
     "sampling_list": sampling_list,
-    # "low_cut_age": LOW_CUT_AGE,
-    # "high_cut_age": HICH_CUT_AGE,
+    "low_cut_age": LOW_CUT_AGE,
+    "high_cut_age": HICH_CUT_AGE,
     "n_age_bins": n_age_bins,
     "n_splits": N_SPLITS,
     "n_repeats": N_REPEATS,
