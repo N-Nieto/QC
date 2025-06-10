@@ -42,7 +42,15 @@ def get_min_common_number_images_in_age_bins(Y_data, age_bins):
     return min_image
 
 
-def filter_age_bins_with_qc(Y_data, age_bins, n_images, sampling, random_state=None):
+def filter_age_bins_with_qc(
+    Y_data: pd.DataFrame,
+    age_bins,
+    n_images: int,
+    sampling: str,
+    random_state=None,
+    qc_metric: str = "IQR",
+    lower_better: bool = True,
+):
     bin = 0
     filter_index = pd.Index([])  # Initialize an empty index
 
@@ -59,10 +67,18 @@ def filter_age_bins_with_qc(Y_data, age_bins, n_images, sampling, random_state=N
 
             if sampling == "high_Q":
                 # Sort by IQR in ascending order to get the lowest IQR values
-                Y_filt = Y_filt.sort_values(by="IQR", ascending=True)
+                if lower_better:
+                    ascending = True
+                else:
+                    ascending = False
+                Y_filt = Y_filt.sort_values(by=qc_metric, ascending=ascending)
             elif sampling == "low_Q":
+                if lower_better:
+                    ascending = False
+                else:
+                    ascending = True
                 # Sort by IQR in descending order to get the highest IQR values
-                Y_filt = Y_filt.sort_values(by="IQR", ascending=False)
+                Y_filt = Y_filt.sort_values(by=qc_metric, ascending=ascending)
             else:
                 # Random sampling
                 Y_filt = Y_filt.sample(frac=1, random_state=random_state)
@@ -238,3 +254,24 @@ class ConfoundRegressor_TIV(TransformerMixin, BaseEstimator):
         Y_residual = Y - self.y_model.predict(TIV)
 
         return X_residual, Y_residual
+
+
+def load_optimal_age_cuts(project_root, sites, n_age_bins):
+    """
+    Load the optimal age cuts from a csv file.
+    """
+    age_cutoffs = {}
+    for site in sites:
+        age_cutoffs[site] = {}
+        site__optimal_age = pd.read_csv(
+            project_root
+            / "lib"
+            / "optimal_age_cuts"
+            / f"N_bins_{n_age_bins}"
+            / site
+            / f"optimal_age_cuts_results_site_{site}_nbins_{n_age_bins}.csv",
+        )
+        age_cutoffs[site]["low"] = site__optimal_age["low_age_cut"].values[0]
+        age_cutoffs[site]["high"] = site__optimal_age["high_age_cut"].values[0]
+
+    return age_cutoffs

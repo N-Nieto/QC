@@ -23,7 +23,7 @@ save_dir = project_root / "QC" / "data"
 save_flag = False
 # %%
 
-site = "DLBS"
+site = "AOMIC-PIOP1"
 # %%
 participants = load_patients_tsv(datalad_dir, site, processing_pipeline)
 # %%
@@ -31,7 +31,9 @@ participants = processing_participant_tsv(participants, site)
 # %%
 IQR = load_IQR_TIV(datalad_dir, site, processing_pipeline)
 # %%
+x = pd.read_csv("/home/nnieto/Nico/QC_project/QC_ML_features/outputs/AOMIC-PIOP2_cat12.8.1/AOMIC-PIOP2_cat12.8.1_p1_r8s4.csv")
 
+# %%
 x = load_X(datalad_dir, site, processing_pipeline, s=4, r=8)
 # %%
 merged = pd.merge(left=IQR, right=x, on="participant_id")
@@ -88,4 +90,25 @@ X, y = load_combine_split_site_data(datalad_dir, site, processing_pipeline)
 if save_flag:
     y.to_csv(save_dir / f"Y_{site}.csv")
     X.to_csv(save_dir / f"X_{site}.csv")
+# %%
+
+save_flag = True
+site = "AOMIC-PIOP1"
+X, y = load_combine_split_site_data(datalad_dir, site, processing_pipeline)
+
+if save_flag:
+    y.to_csv(save_dir / f"Y_{site}.csv")
+    X.to_csv(save_dir / f"X_{site}.csv")
+
+# %%
+
+site = "AOMIC-PIOP2"
+X, y = load_combine_split_site_data(datalad_dir, site, processing_pipeline)
+
+if save_flag:
+    y.to_csv(save_dir / f"Y_{site}.csv")
+    X.to_csv(save_dir / f"X_{site}.csv")
+
+    # %%
+a = pd.read_csv("/home/nnieto/Nico/QC_project/QC_ML_features/outputs/AOMIC-PIOP1_cat12.8.1/AOMIC-PIOP1_ReproVBM_rois_thalamus.csv")
 # %%

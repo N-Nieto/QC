@@ -40,6 +40,25 @@ def load_IQR_TIV(datalad_dir, site, processing_pipeline):
         )
         IQR.rename(columns={"SubjectID": "participant_id"}, inplace=True)
 
+    elif site == "AOMIC-PIOP1":
+        IQR = pd.read_csv(
+            datalad_dir
+            / (site + processing_pipeline)
+            / f"{site}_ReproVBM_rois_thalamus.csv",
+            usecols=["SubjectID", "IQR", "TIV"],
+        )
+        IQR.rename(columns={"SubjectID": "participant_id"}, inplace=True)
+
+    elif site == "AOMIC-PIOP2":
+        IQR = pd.read_csv(
+            datalad_dir
+            / (site + processing_pipeline)
+            / f"{site}_ReproVBM_rois_thalamus.csv",
+            usecols=["SubjectID", "IQR", "TIV"],
+        )
+        IQR.rename(columns={"SubjectID": "participant_id"}, inplace=True)
+
+
     elif site == "eNKI":
         IQR = pd.read_csv(
             datalad_dir
@@ -129,6 +148,12 @@ def load_X(datalad_dir, site, processing_pipeline, s: int, r: int):
         x.query("session == 'ses-1'", inplace=True)
         x.drop(columns=["session", "subject"], inplace=True)
 
+    elif site in ["AOMIC-PIOP1", "AOMIC-PIOP2"]:
+        x["participant_id"] = x["subject"].str.split("_T1").str[0]
+        x["participant_id"] = "sub-" + x["participant_id"]
+        x.drop(columns=["subject"], inplace=True)
+
+
     return x
 
 
@@ -169,7 +194,7 @@ def processing_participant_tsv(participants, site):
         participants.rename(columns={"sex": "gender"}, inplace=True)
         participants.rename(columns={"age_bin": "age"}, inplace=True)
 
-    elif site == "AOMIC_ID1000":
+    elif site in ["AOMIC_ID1000", "AOMIC-PIOP1", "AOMIC-PIOP2"]:
         participants = participants.loc[:, ["participant_id", "sex", "age"]]
         participants.rename(columns={"sex": "gender"}, inplace=True)
 
