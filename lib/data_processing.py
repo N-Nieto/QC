@@ -21,10 +21,11 @@ def retain_images(X, Y):
 
 
 def get_min_common_number_images_in_age_bins(Y_data, age_bins):
+    min_image = 100000  # Initialize with a large number
+    age_low = 0  # Initialize the lower bound of the first age bin
     for t, n in enumerate(age_bins):
         if t == 0:
-            age_low = n
-            min_image = 1000
+            # Skip the first bin as it has no lower bound
             continue
         else:
             age_high = n
@@ -53,10 +54,10 @@ def filter_age_bins_with_qc(
 ):
     bin = 0
     filter_index = pd.Index([])  # Initialize an empty index
-
+    age_low = 0  # Initialize the lower bound of the first age bin
     for t, n in enumerate(age_bins):
         if t == 0:
-            age_low = n
+            # Skip the first bin as it has no lower bound
             continue
         else:
             age_high = n
@@ -160,6 +161,8 @@ def balance_data_age_gender_Qsampling(
     Q_sampling: str,
     low_cut_age: int = 18,
     high_cut_age: int = 80,
+    qc_metric: str = "IQR",
+    lower_better: bool = True,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
     """
     Balances the dataset by age and gender while applying quality sampling.
@@ -192,7 +195,14 @@ def balance_data_age_gender_Qsampling(
     n_images = get_min_common_number_images_in_age_bins(Y, age_bins)
 
     # Get the images based on the quality sampling strategy
-    index = filter_age_bins_with_qc(Y, age_bins, n_images, sampling=Q_sampling)
+    index = filter_age_bins_with_qc(
+        Y,
+        age_bins,
+        n_images,
+        sampling=Q_sampling,
+        qc_metric=qc_metric,
+        lower_better=lower_better,
+    )
 
     # Filter the data
     Y = Y.loc[index]
@@ -275,3 +285,45 @@ def load_optimal_age_cuts(project_root, sites, n_age_bins):
         age_cutoffs[site]["high"] = site__optimal_age["high_age_cut"].values[0]
 
     return age_cutoffs
+
+
+def remove_extremely_low_and_missing_Q_samples(
+    X: pd.DataFrame,
+    Y: pd.DataFrame,
+    threshold: float = 4.0,
+    QC_metric: str = "IQR",
+    lower_better: bool = True,
+):
+    """
+    Remove samples with IQR lower than a given threshold.
+
+    Parameters
+    ----------
+    X : pandas.DataFrame
+        Feature matrix of shape (n_samples, n_features).
+    Y : pandas.DataFrame
+        DataFrame containing at least the column 'IQR' for each sample.
+    threshold : float
+        Minimum IQR value to retain a sample.
+
+    Returns
+    -------
+    X_filtered : same type as X
+        Feature matrix with low-IQR samples removed.
+    Y_filtered : pandas.DataFrame
+        DataFrame with low-IQR samples removed.
+    """
+    if QC_metric not in Y.columns:
+        raise ValueError(f"QC metric '{QC_metric}' not found in Y DataFrame.")
+    if lower_better:
+        # If lower is better, we keep samples with IQR >= threshold
+        index_low = threshold >= Y[QC_metric]
+    else:
+        # If higher is better, we keep samples with IQR <= threshold
+        index_low = Y[QC_metric] >= threshold
+
+    X = X[index_low]
+    Y = Y[index_low]
+    X = X.reset_index(drop=True)
+    Y = Y.reset_index(drop=True)
+    return X, Y

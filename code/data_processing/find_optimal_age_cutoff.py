@@ -8,7 +8,10 @@ project_root = Path().resolve().parents[1]
 sys.path.append(str(project_root))
 from lib.data_loading import load_data_and_qc  # noqa
 from lib.utils import ensure_dir  # noqa
-from lib.data_processing import balance_data_age_gender_Qsampling  # noqa
+from lib.data_processing import (  # noqa
+    balance_data_age_gender_Qsampling,
+    get_age_bins,
+)
 
 
 site_list = [
@@ -24,52 +27,43 @@ site_list = [
     "DLBS",
 ]
 
-results_all = []
 
-age_bins = [3, 10]
+age_step = 1
+age_bin_star = 3
+age_bin_stop = 10
+age_bins_to_test = np.linspace(
+    start=age_bin_star,
+    stop=age_bin_stop,
+    num=(age_bin_stop - age_bin_star) + 1,
+    dtype=int,
+)
 
-for N_bins_original in age_bins:
-    for site in site_list:
-        save_dir = (
-            Path(project_root)
-            / "lib"
-            / "optimal_age_cuts"
-            / f"N_bins_{N_bins_original}"
-            / site
-        )
-        # ensure_dir(save_dir)
-        results = []
+# %%
+for site in site_list:
+    save_dir = Path(project_root) / "lib" / "optimal_age_cuts" / site
+    ensure_dir(save_dir)
+    results_site = []
 
-        print(f"Finding optimal age cuts for {site} with N_bins = {N_bins_original}")
+    X, Y = load_data_and_qc(site=site)
+    Y["age"] = round(Y["age"])  # Ensure age is rounded to nearest integer
+    N_original = X.shape[0]
+    min_age = int(Y["age"].min())
+    max_age = int(Y["age"].max())
+    age_values = sorted(Y["age"].dropna().unique())
+
+    for N_age_bins in age_bins_to_test:
+        print(f"Finding optimal age cuts for {site} with N_bins = {N_age_bins}")
+
         # Load data and prepare it
-        X, Y = load_data_and_qc(site=site)
-        Y["age"] = round(Y["age"])  # Ensure age is rounded to nearest integer
-
-
-
-        min_age = int(Y["age"].min())
-        max_age = int(Y["age"].max())
-        age_values = sorted(Y["age"].unique())
-
-        if len(age_values) < N_bins_original:
+        if len(age_values) < N_age_bins:
             N_bins = len(age_values)  # Adjust N_bins if not enough unique ages
             print(
-                f"Not enough unique ages for {site}. Adjusting N_bins to {N_bins}."
+                f"Not enough unique ages for for this age  bins {N_bins}, Finish experiment for site: {site}."
             )
+            break
         else:
-            N_bins = N_bins_original
+            N_bins = N_age_bins
         # Ensure we have enough unique ages to create the bins
-
-        # Calculate age_step as the minimum difference between consecutive ages
-        if len(age_values) > 1:
-            age_step = min(np.diff(age_values))
-        else:
-            age_step = 1  # default if only one age value exists
-
-        best_N = 0
-        best_low = min_age
-        best_high = max_age
-        best_age_diff = 0
 
         # Calculate minimum required age range
         min_required_range = (N_bins - 1) * age_step
@@ -85,67 +79,74 @@ for N_bins_original in age_bins:
             ]
 
             for high in possible_highs:
-                X_mock, Y_mock = balance_data_age_gender_Qsampling(
+                current_age_diff = high - low
+
+                X_low, Y_low = balance_data_age_gender_Qsampling(
                     X,
                     Y,
                     N_bins,
-                    Q_sampling="random_q",  # not important
+                    Q_sampling="low_q",
                     low_cut_age=low,
                     high_cut_age=high,
                 )
+
+                X_high, Y_high = balance_data_age_gender_Qsampling(
+                    X,
+                    Y,
+                    N_bins,
+                    Q_sampling="high_q",
+                    low_cut_age=low,
+                    high_cut_age=high,
+                )
+
                 current_age_diff = high - low
 
-                current_N = X_mock.shape[0]
-                results_all.append(
+                current_N_low = X_low.shape[0]
+                current_N_high = X_high.shape[0]
+
+                assert current_N_low == current_N_high, "Sampling does not much"
+
+                current_N = current_N_low
+
+                age_bins_range = get_age_bins(Y, N_bins)
+
+                # Determine what is the max number of images in the
+                # formed age bins for each gender
+
+                # Convert arrays to sets
+                set1 = set(Y_low.index)
+                set2 = set(Y_high.index)
+                N_share = len(set1.intersection(set2))
+                Share_percentage = current_N / N_share
+                # Print the number interception participants
+                results_site.append(
                     {
                         "site": site,
+                        "Original_N": N_original,
+                        "Obtained_N": current_N,
+                        "N_share": N_share,
+                        "n_images_each_bin": (current_N / 2) / N_bins,
+                        "age_bins": N_bins,
                         "low_age_cut": low,
                         "high_age_cut": high,
-                        "Obtained_N": current_N,
+                        "Share_percentage": Share_percentage,
                         "age_diff": current_age_diff,
-                        "age_bins": N_bins,
-
+                        "median_low": Y_low["IQR"].median(),
+                        "median_hich": Y_high["IQR"].median(),
+                        "mean_low": Y_low["IQR"].mean(),
+                        "mean_hich": Y_high["IQR"].mean(),
+                        "std_low": Y_low["IQR"].std(),
+                        "std_high": Y_high["IQR"].std(),
                     }
                 )
-                # Check if this combination is better than our current best
-                if (current_N > best_N) or (
-                    current_N == best_N and current_age_diff > best_age_diff
-                ):
-                    best_N = current_N
-                    best_low = low
-                    best_high = high
-                    best_age_diff = current_age_diff
+    # Save the results for each site
+    results_site = pd.DataFrame(results_site)
+    # Save to CSV if needed
+    results_site.to_csv(
+        save_dir / f"results_optimal_N_experiment_site_{site}.csv",
+        index=False,
+    )
 
-        results.append(
-            {
-                "site": site,
-                "low_age_cut": best_low,
-                "high_age_cut": best_high,
-                "optimal_N": best_N,
-                "age_diff": best_age_diff,
-                "N_bins": N_bins,
-            }
-        )
-        # # Display results
-        # print(results)
-
-        results = pd.DataFrame(results)
-        # Save to CSV if needed
-        results.to_csv(
-            save_dir / f"optimal_age_cuts_results_site_{site}_nbins_{N_bins_original}.csv",
-            index=False,
-        )
-# %%
-results = pd.DataFrame(results_all)
-save_dir = (
-    Path(project_root)
-    / "lib"
-    / "optimal_age_cuts")
-
-results.to_csv(
-    save_dir / "optimal_age_cuts_results_overall.csv",
-    index=False,
-)
 print("Experiment done!")
 
 # %%

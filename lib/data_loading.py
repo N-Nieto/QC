@@ -1,10 +1,15 @@
 import pandas as pd
 from typing import Tuple
 from pathlib import Path
+from lib.data_processing import remove_extremely_low_and_missing_Q_samples
 
 
 def load_data_and_qc(
-    site: str, base_path: Path = Path().resolve().parents[1]
+    site: str,
+    base_path: Path = Path().resolve().parents[1],
+    threshold=4,
+    QC_metric: str = "IQR",
+    lower_better: bool = True,
 ) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """
     Load and preprocess data for a given site.
@@ -26,9 +31,33 @@ def load_data_and_qc(
     # The data must be stored in "data" inside the repo folder
     data_folder_path = base_path / "data/"
 
-    X_data = pd.read_csv(data_folder_path / ("X_" + site + ".csv"), index_col=0)
-    Y_data = pd.read_csv(data_folder_path / ("Y_" + site + ".csv"), index_col=0)
-    X_data = X_data.dropna(axis=1)
+    if site == "Pooled":
+        # For pooled data, load all sites' data
+        NotImplementedError("Pooled for all ")
+        # for s in site_list[:-1]:
+        #     X_temp, Y_temp = load_data_and_qc(site=s)
+        #     if "X" in locals():
+        #         X_data = pd.concat([X_data, X_temp], ignore_index=True)
+        #         Y_data = pd.concat([Y_data, Y_temp], ignore_index=True)
+        #     else:
+        #         X_data = X_temp
+        #         Y_data = Y_temp
+        X_data = pd.DataFrame()
+        Y_data = pd.DataFrame()
+
+    else:
+        X_data = pd.read_csv(data_folder_path / ("X_" + site + ".csv"), index_col=0)
+        Y_data = pd.read_csv(data_folder_path / ("Y_" + site + ".csv"), index_col=0)
+        X_data = X_data.dropna(axis=1)
+
+    X_data, Y_data = remove_extremely_low_and_missing_Q_samples(
+        X=X_data,
+        Y=Y_data,
+        threshold=threshold,
+        QC_metric=QC_metric,
+        lower_better=lower_better,
+    )
+
     return X_data, Y_data
 
 
